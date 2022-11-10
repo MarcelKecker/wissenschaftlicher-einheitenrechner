@@ -123,6 +123,6 @@ function verarbeiteSubmitClick() {
 function berechneErgebnis() {
   let ausgangsEinheit1 = hashmap.get(ausgangsEinheit)
   let zielEinheit1 = hashmap.get(zielEinheit)
-  let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert)).getWert(); // getWertvoneV gibt immer 450000000  zurück
+  let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert)).getWert();
   return ergebnis;
 }
