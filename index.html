@@ -110,27 +110,31 @@
 
 <body>
     <div class="dropdown">
-        <button class="dropbtn">Ausgangseinheit</button>
+        <button class="dropbtn" id="buttonAusgangseinheit">Ausgangseinheit</button>
         <div class="dropdown-content" id="dropbtn">
-            <button onclick="myFunction('kg', 'Ausgangseinheit')" (click)="changeRoute('First')"> kg </button>
-            <button onclick="myFunction('g', 'Ausgangseinheit')"> g </button>
-            <button onclick="myFunction('mg', 'Ausgangseinheit')"> mg </button>
-            <button onclick="myFunction('mug', 'Ausgangseinheit')"> mug </button>
-            <button onclick="myFunction('ng', 'Ausgangseinheit')"> ng </button>
-            <button onclick="myFunction('pg', 'Ausgangseinheit')"> pg </button>
-            <button onclick="myFunction('ag', 'Ausgangseinheit')"> ag </button>
+            <button onclick="setAusgangseinheit('kg')"> kg </button>
+            <button onclick="setAusgangseinheit('g')"> g </button>
+            <button onclick="setAusgangseinheit('mg')"> mg </button>
+            <button onclick="setAusgangseinheit('mug')"> mug </button>
+            <button onclick="setAusgangseinheit('ng')"> ng </button>
+            <button onclick="setAusgangseinheit('pg')"> pg </button>
+            <button onclick="setAusgangseinheit('ag')"> ag </button>
+            <button onclick="setAusgangseinheit('zg')"> zg </button>
+            <button onclick="setAusgangseinheit('yg')"> yg </button>
         </div>
     </div>
     <div class="dropdown1">
-        <button class="dropbtn1">Zieleinheit</button>
+        <button class="dropbtn1" id="buttonZieleinheit">Zieleinheit</button>
         <div class="dropdown-content1" id="dropbtn1">
-            <button onclick="myFunction('kg', 'Zieleinheit')"> kg </button>
-            <button onclick="myFunction('g', 'Zieleinheit')"> g </button>
-            <button onclick="myFunction('mg', 'Zieleinheit')"> mg </button>
-            <button onclick="myFunction('mug', 'Ausgangseinheit')"> mug </button>
-            <button onclick="myFunction('ng', 'Zieleinheit')"> ng </button>
-            <button onclick="myFunction('pg', 'Zieleinheit')"> pg </button>
-            <button onclick="myFunction('ag', 'Zieleinheit')"> ag </button>
+            <button onclick="setZieleinheit('kg')"> kg </button>
+            <button onclick="setZieleinheit('g')"> g </button>
+            <button onclick="setZieleinheit('mg')"> mg </button>
+            <button onclick="setZieleinheit('mug')"> mug </button>
+            <button onclick="setZieleinheit('ng')"> ng </button>
+            <button onclick="setZieleinheit('pg')"> pg </button>
+            <button onclick="setZieleinheit('ag')"> ag </button>
+            <button onclick="setZieleinheit('zg')"> zg </button>
+            <button onclick="setZieleinheit('yg')"> yg </button>
         </div>
     </div>
     <div class="entsprichtZeichen">
@@ -138,6 +142,9 @@
     </div>
     <input type="submit" class="submit" onclick="verarbeiteSubmitClick()">
     <input type="number" class="ausgangsWert" placeholder="Ausgangswert" id="ausgangsWert">
+    <p id="endWertAusgabe">
+
+    </p>
     <script src="index.js"> </script>
 </body>
 
