@@ -17,23 +17,28 @@ class Faktor {
   }
 
   multiplizieren(pFaktor) {
-    let neuerVorFaktor = this.vorFaktor * pFaktor.vorFaktor
-    let neueListeExponenten = [
-      this.listeExponenten[0] + pFaktor.listeExponenten[0],
-      this.listeExponenten[1] + pFaktor.listeExponenten[1],
-      this.listeExponenten[2] + pFaktor.listeExponenten[2]
-    ];
-    // teilweise kein this.vorFaktor vorhanden (warum?)
+    let neuerVorFaktor = werteMultiplizeren(this.vorFaktor, pFaktor.vorFaktor);
+    //console.log("multi: vor1 ", this.vorFaktor, " vor2 ", pFaktor.vorFaktor, " neu ", neuerVorFaktor);
+    let neueListeExponenten = new Array();
+    if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
+      return;
+    }
+    for (let i = 0; i < this.listeExponenten.length; i++) {
+      neueListeExponenten[i] = this.listeExponenten[i] + pFaktor.listeExponenten[i];
+    }
     return new Faktor(neuerVorFaktor, neueListeExponenten);
   }
 
   dividieren(pFaktor) {
-    let neuerVorFaktor = this.vorFaktor / pFaktor.vorFaktor
-    let neueListeExponenten = [
-      this.listeExponenten[0] - pFaktor.listeExponenten[0],
-      this.listeExponenten[1] - pFaktor.listeExponenten[1],
-      this.listeExponenten[2] - pFaktor.listeExponenten[2]
-    ];
+    let neuerVorFaktor = werteDividieren(this.vorFaktor, pFaktor.vorFaktor);
+    //console.log("divi: vor1 ", this.vorFaktor, " vor2 ", pFaktor.vorFaktor, " neu ", neuerVorFaktor);
+    let neueListeExponenten = new Array();
+    if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
+      return;
+    }
+    for (let i = 0; i < this.listeExponenten.length; i++) {
+      neueListeExponenten[i] = this.listeExponenten[i] - pFaktor.listeExponenten[i];
+    }
     return new Faktor(neuerVorFaktor, neueListeExponenten);
   }
 }
@@ -43,15 +48,11 @@ class BasisEinheit {
     this.faktorIntraDimensional = faktorIntraDimensional;
   }
   geteVWert(wert) {
-    console.log("geteVWert basis");
-    console.log(wert.multiplizieren(this.faktorIntraDimensional));
-    console.log("geteVWert basis ende");
+    //console.log("basis eV Wert")
     return wert.multiplizieren(this.faktorIntraDimensional);
   }
   getWertVoneV(wert) {
-    console.log("getWertVoneV basis");
-    console.log(wert.dividieren(this.faktorIntraDimensional));
-    console.log("getWertVoneV basis ende");
+    //console.log("basis von eV Wert")
     return wert.dividieren(this.faktorIntraDimensional);
   }
 }
@@ -60,20 +61,20 @@ class UnterEinheit {
   constructor(basisEinheit, faktorInterDimensional) {
     this.basisEinheit = basisEinheit;
     this.faktorInterDimensional = faktorInterDimensional
+    //console.log("faktorInterDimensional vorfaktor: ", this.faktorInterDimensional.vorFaktor)
   }
   geteVWert(wert) {
-    console.log("geteVWert unter");
-    console.log(this.basisEinheit.geteVWert(wert).multiplizieren(this.faktorInterDimensional));
-    console.log("geteVWert unter ende");
+    //console.log("unter eV Wert")
+    //console.log("faktorInterDimensional vorfaktor: ", this.faktorInterDimensional.vorFaktor)
     return this.basisEinheit.geteVWert(wert).multiplizieren(this.faktorInterDimensional);
   }
   getWertVoneV(wert) {
-    console.log("getWertVoneV unter");
-    console.log(this.basisEinheit.getWertVoneV(wert).dividieren(this.faktorInterDimensional));
-    console.log("getWertVoneV unter ende");
+    //console.log("unter von eV Wert")
+    //console.log("faktorInterDimensional vorfaktor: ", this.faktorInterDimensional.vorFaktor)
     return this.basisEinheit.getWertVoneV(wert).dividieren(this.faktorInterDimensional);
   }
 }
+
 // neue Einheit hinzufügen: -> index.html buttons hinzufügen
 //let neueEinheit = new unterEinheit(kg, 100);
 let kg = new BasisEinheit(new Faktor(1, [-2, 0, 0]));
@@ -124,5 +125,6 @@ function berechneErgebnis() {
   let ausgangsEinheit1 = hashmap.get(ausgangsEinheit)
   let zielEinheit1 = hashmap.get(zielEinheit)
   let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert)).getWert();
+  //console.log("listeExponenten ergebnis", zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert)).listeExponenten);
   return ergebnis;
 }
