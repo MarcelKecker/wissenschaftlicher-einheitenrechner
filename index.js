@@ -2,7 +2,7 @@ var ausgangsEinheit;
 var zielEinheit;
 var ausgangsWert;
 var ergebnis;
-const c = 3000000000;
+const c = 299792458;
 const h = 6.6260693 * Math.pow(10, -34);
 const hq = 1.054571817 * Math.pow(10, -34);
 
@@ -13,7 +13,7 @@ class Faktor {
   }
 
   getWert() {
-    return this.vorFaktor * Math.pow(c, this.listeExponenten[0]) * Math.pow(h, this.listeExponenten[1]) * Math.pow(hq, this.listeExponenten[2])
+    return this.vorFaktor * Math.pow(10, this.listeExponenten[0]) * Math.pow(c, this.listeExponenten[1]) * Math.pow(h, this.listeExponenten[2]) * Math.pow(hq, this.listeExponenten[3])
   }
 
   multiplizieren(pFaktor) {
@@ -77,15 +77,15 @@ class UnterEinheit {
 
 // neue Einheit hinzufügen: -> index.html buttons hinzufügen
 //let neueEinheit = new unterEinheit(kg, 100);
-let kg = new BasisEinheit(new Faktor(1, [-2, 0, 0]));
-let g = new UnterEinheit(kg, new Faktor(Math.pow(10, -3), [0, 0, 0]));
-let mg = new UnterEinheit(kg, new Faktor(Math.pow(10, -6), [0, 0, 0]));
-let mug = new UnterEinheit(kg, new Faktor(Math.pow(10, -9), [0, 0, 0]));
-let ng = new UnterEinheit(kg, new Faktor(Math.pow(10, -12), [0, 0, 0]));
-let pg = new UnterEinheit(kg, new Faktor(Math.pow(10, -15), [0, 0, 0]));
-let ag = new UnterEinheit(kg, new Faktor(Math.pow(10, -18), [0, 0, 0]));
-let zg = new UnterEinheit(kg, new Faktor(Math.pow(10, -21), [0, 0, 0]));
-let yg = new UnterEinheit(kg, new Faktor(Math.pow(10, -24), [0, 0, 0]));
+let kg = new BasisEinheit(new Faktor(1, [0, -2, 0, 0]));
+let g = new UnterEinheit(kg, new Faktor(1, [-3, 0, 0, 0]));
+let mg = new UnterEinheit(kg, new Faktor(1, [-6, 0, 0, 0]));
+let mug = new UnterEinheit(kg, new Faktor(1, [-9, 0, 0, 0]));
+let ng = new UnterEinheit(kg, new Faktor(1, [-12, 0, 0, 0]));
+let pg = new UnterEinheit(kg, new Faktor(1, [-15, 0, 0, 0]));
+let ag = new UnterEinheit(kg, new Faktor(1, [-18, 0, 0, 0]));
+let zg = new UnterEinheit(kg, new Faktor(1, [-21, 0, 0, 0]));
+let yg = new UnterEinheit(kg, new Faktor(1, [-24, 0, 0, 0]));
 
 let hashmap = new Map([
   ['kg', kg],
@@ -116,7 +116,11 @@ function verarbeiteSubmitClick() {
     return;
   }
 
-  ausgangsWert = new Faktor(parseInt(document.getElementById("ausgangsWert").value), [0, 0, 0]);
+  ausgangsWert = new Faktor(parseInt(document.getElementById("ausgangsWert").value), [0, 0, 0, 0]);
+  while (ausgangsWert.vorFaktor >= 10) {
+    ausgangsWert.vorFaktor = ausgangsWert.vorFaktor / 10;
+    ausgangsWert.listeExponenten[0] += 1;
+  }
   let ergebnis = berechneErgebnis();
   document.getElementById("endWertAusgabe").textContent = ergebnis;
   console.log(ergebnis);
