@@ -17,7 +17,7 @@ class Faktor {
   }
 
   multiplizieren(pFaktor) {
-    let neuerVorFaktor = werteMultiplizeren(this.vorFaktor, pFaktor.vorFaktor);
+    let neuerVorFaktor = this.vorFaktor * pFaktor.vorFaktor;
     //console.log("multi: vor1 ", this.vorFaktor, " vor2 ", pFaktor.vorFaktor, " neu ", neuerVorFaktor);
     let neueListeExponenten = new Array();
     if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
@@ -30,7 +30,7 @@ class Faktor {
   }
 
   dividieren(pFaktor) {
-    let neuerVorFaktor = werteDividieren(this.vorFaktor, pFaktor.vorFaktor);
+    let neuerVorFaktor = this.vorFaktor / pFaktor.vorFaktor;
     //console.log("divi: vor1 ", this.vorFaktor, " vor2 ", pFaktor.vorFaktor, " neu ", neuerVorFaktor);
     let neueListeExponenten = new Array();
     if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
