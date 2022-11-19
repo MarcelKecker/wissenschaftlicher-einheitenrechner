@@ -22,13 +22,23 @@
             <button onclick="setAusgangseinheit('ag')"> ag </button>
             <button onclick="setAusgangseinheit('zg')"> zg </button>
             <button onclick="setAusgangseinheit('yg')"> yg </button>
+
             <button onclick="setAusgangseinheit('s')"> s </button>
             <button onclick="setAusgangseinheit('ps')"> ps </button>
             <button onclick="setAusgangseinheit('as')"> as </button>
+
             <button onclick="setAusgangseinheit('eV')"> eV </button>
-            <button onclick="setAusgangseinheit('GeV')"> KeV </button>
+            <button onclick="setAusgangseinheit('GeV')"> keV </button>
             <button onclick="setAusgangseinheit('GeV')"> MeV </button>
             <button onclick="setAusgangseinheit('GeV')"> GeV </button>
+
+            <button onclick="setAusgangseinheit('m')"> m </button>
+
+            <button onclick="setAusgangseinheit('K')"> K </button>
+
+            <button onclick="setAusgangseinheit('kgMalmPros')"> kgMalmPros </button>
+
+            <button onclick="setAusgangseinheit('mPros')"> mPros </button>
         </div>
     </div>
     <div class="dropdown1">
@@ -43,13 +53,23 @@
             <button onclick="setZieleinheit('ag')"> ag </button>
             <button onclick="setZieleinheit('zg')"> zg </button>
             <button onclick="setZieleinheit('yg')"> yg </button>
+
             <button onclick="setZieleinheit('s')"> s </button>
             <button onclick="setZieleinheit('ps')"> ps </button>
             <button onclick="setZieleinheit('as')"> as </button>
+
             <button onclick="setZieleinheit('eV')"> eV </button>
-            <button onclick="setZieleinheit('GeV')"> KeV </button>
+            <button onclick="setZieleinheit('GeV')"> keV </button>
             <button onclick="setZieleinheit('GeV')"> MeV </button>
             <button onclick="setZieleinheit('GeV')"> GeV </button>
+
+            <button onclick="setZieleinheit('m')"> m </button>
+
+            <button onclick="setZieleinheit('K')"> K </button>
+            
+            <button onclick="setZieleinheit('kgMalmPros')"> kgMalmPros </button>
+
+            <button onclick="setZieleinheit('mPros')"> mPros </button>
         </div>
     </div>
     <div class="entsprichtZeichen">
@@ -57,9 +77,8 @@
     </div>
     <input type="submit" class="submit" onclick="verarbeiteSubmitClick()">
     <input type="number" class="ausgangsWert" placeholder="Ausgangswert" id="ausgangsWert">
-    <p id="endWertAusgabe">
-
-    </p>
+    <p id="endWertAusgabeWert"> </p>
+    <p id="endWertAusgabeKonstanten"> </p>
     <script src="index.js"> </script>
 </body>
 
