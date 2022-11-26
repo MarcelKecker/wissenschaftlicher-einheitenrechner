@@ -36,9 +36,9 @@
 
             <button onclick="setAusgangseinheit('K')"> K </button>
 
-            <button onclick="setAusgangseinheit('kgMalmPros')"> kgMalmPros </button>
+            <button onclick="setAusgangseinheit('kgMalmPros')"> kg ⋅ m/s </button>
 
-            <button onclick="setAusgangseinheit('mPros')"> mPros </button>
+            <button onclick="setAusgangseinheit('mPros')"> m/s </button>
         </div>
     </div>
     <div class="dropdown1">
@@ -67,16 +67,16 @@
 
             <button onclick="setZieleinheit('K')"> K </button>
             
-            <button onclick="setZieleinheit('kgMalmPros')"> kgMalmPros </button>
+            <button onclick="setZieleinheit('kgMalmPros')"> kg ⋅ m/s </button>
 
-            <button onclick="setZieleinheit('mPros')"> mPros </button>
+            <button onclick="setZieleinheit('mPros')"> m/s </button>
         </div>
     </div>
     <div class="entsprichtZeichen">
         ≙
     </div>
     <input type="submit" class="submit" onclick="verarbeiteSubmitClick()">
-    <input type="number" class="ausgangsWert" placeholder="Ausgangswert" id="ausgangsWert">
+    <input type="number" step="any" class="ausgangsWert" placeholder="Ausgangswert" id="ausgangsWert">
     <p id="endWertAusgabeWert"> </p>
     <p id="endWertAusgabeKonstanten"> </p>
     <script src="index.js"> </script>

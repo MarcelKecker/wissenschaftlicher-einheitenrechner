@@ -23,7 +23,6 @@ class Faktor {
 
   multiplizieren(pFaktor) {
     let neuerVorFaktor = this.vorFaktor * pFaktor.vorFaktor;
-    //console.log("multi: vor1 ", this.vorFaktor, " vor2 ", pFaktor.vorFaktor, " neu ", neuerVorFaktor);
     let neueListeExponenten = new Array();
     if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
       return;
@@ -36,7 +35,6 @@ class Faktor {
 
   dividieren(pFaktor) {
     let neuerVorFaktor = this.vorFaktor / pFaktor.vorFaktor;
-    //console.log("divi: vor1 ", this.vorFaktor, " vor2 ", pFaktor.vorFaktor, " neu ", neuerVorFaktor);
     let neueListeExponenten = new Array();
     if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
       return;
@@ -51,7 +49,7 @@ class Faktor {
     for (;this.vorFaktor >= 10; this.listeExponenten[0]++) {
       this.vorFaktor = this.vorFaktor / 10;
     }
-    for (;this.vorFaktor < 1; this.listeExponenten[0]--) {
+    for (;this.vorFaktor < 1 && this.vorFaktor > 0; this.listeExponenten[0]--) {
       this.vorFaktor = this.vorFaktor * 10;
     }
   }
@@ -62,11 +60,9 @@ class BasisEinheit {
     this.faktorIntraDimensional = faktorIntraDimensional;
   }
   geteVWert(wert) {
-    //console.log("basis eV Wert")
     return wert.multiplizieren(this.faktorIntraDimensional);
   }
   getWertVoneV(wert) {
-    //console.log("basis von eV Wert")
     return wert.dividieren(this.faktorIntraDimensional);
   }
 }
@@ -75,16 +71,11 @@ class UnterEinheit {
   constructor(basisEinheit, faktorInterDimensional) {
     this.basisEinheit = basisEinheit;
     this.faktorInterDimensional = faktorInterDimensional
-    //console.log("faktorInterDimensional vorfaktor: ", this.faktorInterDimensional.vorFaktor)
   }
   geteVWert(wert) {
-    //console.log("unter eV Wert")
-    //console.log("faktorInterDimensional vorfaktor: ", this.faktorInterDimensional.vorFaktor)
     return this.basisEinheit.geteVWert(wert).multiplizieren(this.faktorInterDimensional);
   }
   getWertVoneV(wert) {
-    //console.log("unter von eV Wert")
-    //console.log("faktorInterDimensional vorfaktor: ", this.faktorInterDimensional.vorFaktor)
     return this.basisEinheit.getWertVoneV(wert).dividieren(this.faktorInterDimensional);
   }
 }
@@ -218,21 +209,30 @@ let hashmap = new Map([
 
 function setAusgangseinheit(einheit) {
   ausgangsEinheit = einheit;
+  if (ausgangsEinheit == "kgMalmPros") {
+    einheit = "kg ⋅ m/s"
+  }
+  if (ausgangsEinheit == "mPros") {
+    einheit = "m/s"
+  }
   document.getElementById("buttonAusgangseinheit").textContent = einheit;
-  console.log("Ausgangseinheit: ", ausgangsEinheit);
 }
 
 function setZieleinheit(einheit) {
   zielEinheit = einheit;
+  if (zielEinheit == "kgMalmPros") {
+    einheit = "kg ⋅ m/s"
+  }
+  if (zielEinheit == "mPros") {
+    einheit = "m/s"
+  }
   document.getElementById("buttonZieleinheit").textContent = einheit;
-  console.log("Zieleinheit: ", zielEinheit);
 }
 function verarbeiteSubmitClick() {
   if (ausgangsEinheit == undefined || zielEinheit == undefined || document.getElementById("ausgangsWert").value == '') {
     return;
   }
-
-  ausgangsWert = new Faktor(parseInt(document.getElementById("ausgangsWert").value), [0, 0, 0, 0, 0]);
+  ausgangsWert = new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0]);
   while (ausgangsWert.vorFaktor >= 10) {
     ausgangsWert.vorFaktor = ausgangsWert.vorFaktor / 10;
     ausgangsWert.listeExponenten[0] += 1;
@@ -245,17 +245,31 @@ function zeigeErgebnisAn(ergebnis) {
   let ergebnisOhneZehnerPotenz = new Faktor(ergebnis.getWertOhneZehnerPotenz(), [0, 0, 0, 0, 0]);
   ergebnisOhneZehnerPotenz.bringeAufRichtigeZehnerPotenz();
   let ausgabeVorFaktor = ergebnisOhneZehnerPotenz.vorFaktor;
-  let ausgabe10Exponent = ergebnis.listeExponenten[0] + ergebnisOhneZehnerPotenz.listeExponenten[0];
-  if (ergebnis.listeExponenten[0] + ergebnisOhneZehnerPotenz.listeExponenten[0]== 0) {
+  let zehnerExponent = ergebnis.listeExponenten[0] + ergebnisOhneZehnerPotenz.listeExponenten[0];
+  let ausgabe10Exponent = " * 10^" + zehnerExponent
+  if (zehnerExponent== 0) {
     ausgabe10Exponent = ''
+  } else if (zehnerExponent <= 3 && zehnerExponent >= 1) {
+    ausgabe10Exponent = ''
+    ausgabeVorFaktor = ausgabeVorFaktor * Math.pow(10, zehnerExponent);
   }
-  document.getElementById("endWertAusgabeWert").textContent = ausgabeVorFaktor + " * 10^" + ausgabe10Exponent;
+  if (ausgabeVorFaktor == 1) {
+    if (ausgabe10Exponent == "") {
+      ausgabeVorFaktor = 1;
+    } else {
+      ausgabeVorFaktor = "";
+      ausgabe10Exponent = ausgabe10Exponent.replace(" * ", "")
+    }
+  }
+  if (ausgabeVorFaktor == 0) {
+    ausgabe10Exponent = ""
+
+  }
+  document.getElementById("endWertAusgabeWert").textContent = ausgabeVorFaktor + ausgabe10Exponent;
+  ergebnis.bringeAufRichtigeZehnerPotenz();
   let konstAusgabe = "";
-  if (ergebnis.vorFaktor !== 1) {
-    konstAusgabe += ergebnis.vorFaktor
-  }
-  if (ergebnis.listeExponenten[0] == 1) {
-    konstAusgabe += " * 10"
+  if (ergebnis.listeExponenten[0] <= 3 && ergebnis.listeExponenten[0] >= 1) {
+    ergebnis.vorFaktor = ergebnis.vorFaktor * Math.pow(10, ergebnis.listeExponenten[0])
   } else if (ergebnis.listeExponenten[0] !== 0) {
     konstAusgabe += " * 10^" + ergebnis.listeExponenten[0]
   } 
@@ -274,7 +288,12 @@ function zeigeErgebnisAn(ergebnis) {
   } else if (ergebnis.listeExponenten[3] !== 0) {
     konstAusgabe += " * e^" + ergebnis.listeExponenten[3];
   } 
-  if (konstAusgabe == ausgabeVorFaktor + " * 10^" + ausgabe10Exponent) {
+  if (ergebnis.vorFaktor == 1) {
+    konstAusgabe = konstAusgabe.replace(" * ", "")
+  } else {
+    konstAusgabe = ergebnis.vorFaktor + "" + konstAusgabe
+  }
+  if (konstAusgabe == ausgabeVorFaktor + ausgabe10Exponent) {
     document.getElementById("endWertAusgabeKonstanten").textContent = ""
     return;
   }
@@ -285,7 +304,5 @@ function berechneErgebnis() {
   let ausgangsEinheit1 = hashmap.get(ausgangsEinheit)
   let zielEinheit1 = hashmap.get(zielEinheit)
   let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
-  //console.log("listeExponenten ergebnis", zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert)).listeExponenten);
-  console.log(zielEinheit1.faktorIntraDimensional, zielEinheit1.faktorInterDimensional)
   return ergebnis;
 }
