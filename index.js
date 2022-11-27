@@ -306,3 +306,19 @@ function berechneErgebnis() {
   let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
   return ergebnis;
 }
+//temp
+
+// .dropbtn {
+//   box-sizing: border-box;
+//   height: 10%;
+//   width: 10%;
+//   position: fixed;
+//   top: 50%;
+//   margin-top: -100px;
+//   margin-left: -200px;
+//   background-color: #f1f1f1;
+//   color: black;
+//   padding: 0px;
+//   font-size: 16px;
+//   border: black;
+// }

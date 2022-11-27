@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css"></style>
 </head>
 
@@ -77,9 +78,13 @@
     </div>
     <input type="submit" class="submit" onclick="verarbeiteSubmitClick()">
     <input type="number" step="any" class="ausgangsWert" placeholder="Ausgangswert" id="ausgangsWert">
-    <p id="endWertAusgabeWert"> </p>
-    <p id="endWertAusgabeKonstanten"> </p>
+    <div class="endWertAusgaben" id="endWertAusgaben"> 
+        <p class = "endWertAusgabeWert" id="endWertAusgabeWert">  </p>
+        <p class = "endWertAusgabeKonstanten" id="endWertAusgabeKonstanten"> </p>
+    </div>
+
     <script src="index.js"> </script>
 </body>
 
 </html>
+

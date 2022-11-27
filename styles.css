@@ -1,44 +1,64 @@
-.dropbtn {
-    box-sizing: border-box;
-    height: 10%;
-    width: 10%;
-    position: fixed;
-    top: 50%;
-    margin-top: -100px;
-    margin-left: -200px;
-    background-color: #f1f1f1;
-    color: black;
-    padding: 0px;
-    font-size: 16px;
-    border: black;
+.ausgangsWert {
+    top: 20%;
+    left: 10%;
+    background-color: #FCFCFC;
+    margin-left: auto;
 }
 
-.dropbtn-links {
-    left: 45%;
-}
-
-.dropbtn-rechts {
-    left: 80%;
-}
-
-.dropdown,
-.dropdown1 {
-    box-sizing: border-box;
-    height: 10%;
-    width: 10%;
-    position: fixed;
-    top: 60%;
-    margin-top: -100px;
-    margin-left: -200px;
-    display: inline-block;
+.dropbtn-links, 
+.dropdown {
+    left: 50%;
+    top: 20%;
+    margin-left: auto;
 }
 
 .dropdown {
-    left: 45%;
+    top: 30%;
+}
+
+.entsprichtZeichen {
+    font-size: 500%;
+    position: fixed;
+    top: 20%;
+    left: 82%;
+    margin-left: auto;
+}
+
+.endWertAusgaben{
+    position: fixed;
+    top: 40%;
+    left: 10%;
+    margin-left: auto;
+}
+
+.dropbtn-rechts,
+.dropdown1 {
+    top: 40%;
+    left: 50%;
+    margin-left: auto;
 }
 
 .dropdown1 {
-    left: 80%;
+    top: 50%;
+}
+
+.submit {
+    top: 60%;
+    left: 30%;
+    margin-left: auto;
+}
+
+.dropdown,
+.dropdown1,
+.ausgangsWert,
+.submit, 
+.dropbtn, 
+.endWertAusgaben{
+    box-sizing: border-box;
+    height: 10%;
+    width: 30%;
+    position: fixed;
+    display: inline-block;
 }
 
 .dropdown-content,
@@ -49,10 +69,10 @@
     max-height: 500%;
     display: none;
     position: absolute;
-    background-color: #f1f1f1;
+    background-color: #f1f10f10;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    z-index: 2;
 }
 
 .dropdown-content button,
@@ -66,7 +86,9 @@
 }
 
 .dropdown-content button:hover,
-.dropdown-content1 button:hover {
+.dropdown-content1 button:hover,
+.dropdown:hover .dropbtn,
+.dropdown1:hover .dropbtn {
     background-color: #ddd;
 }
 
@@ -75,23 +97,26 @@
     display: block;
 }
 
-.dropdown:hover .dropbtn,
-.dropdown1:hover .dropbtn1 {
-    background-color: #3e8e41;
-}
-
-.entsprichtZeichen {
-    font-size: 500%;
-    position: fixed;
-    top: 50%;
-    left: 60%;
-    margin-top: -100px;
-    margin-left: -200px;
-}
-
 .submit,
-.ausgangsWert {
+.ausgangsWert,
+.dropbtn,
+.endWertAusgaben {
+
+
     box-sizing: border-box;
-    width: 200px;
-    padding: 20px;
+    padding: 5px;
+    
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #eeeded;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    z-index: 1;
+}
+
+.endWertAusgabeWert,
+.endWertAusgabeKonstanten {
+    width: 80%;
 }
