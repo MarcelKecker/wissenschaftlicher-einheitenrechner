@@ -11,37 +11,42 @@
 </head>
 
 <body>
-    <div class="dropdown1">
-        <button class="dropbtn dropbtn-ziel" id="buttonZieleinheit">Zieleinheit</button>
-        <div class="dropdown-content1" id="dropbtn1">
-            <button onclick="setZieleinheit('kg')"> kg </button>
-            <button onclick="setZieleinheit('g')"> g </button>
-            <button onclick="setZieleinheit('mg')"> mg </button>
-            <button onclick="setZieleinheit('mug')"> mug </button>
-            <button onclick="setZieleinheit('ng')"> ng </button>
-            <button onclick="setZieleinheit('pg')"> pg </button>
-            <button onclick="setZieleinheit('ag')"> ag </button>
-            <button onclick="setZieleinheit('zg')"> zg </button>
-            <button onclick="setZieleinheit('yg')"> yg </button>
-
-            <button onclick="setZieleinheit('s')"> s </button>
-            <button onclick="setZieleinheit('ps')"> ps </button>
-            <button onclick="setZieleinheit('as')"> as </button>
-
-            <button onclick="setZieleinheit('eV')"> eV </button>
-            <button onclick="setZieleinheit('GeV')"> keV </button>
-            <button onclick="setZieleinheit('GeV')"> MeV </button>
-            <button onclick="setZieleinheit('GeV')"> GeV </button>
-
-            <button onclick="setZieleinheit('m')"> m </button>
-
-            <button onclick="setZieleinheit('K')"> K </button>
-            
-            <button onclick="setZieleinheit('kgMalmPros')"> kg ⋅ m/s </button>
-
-            <button onclick="setZieleinheit('mPros')"> m/s </button>
-        </div>
+    <div class="entsprichtZeichen">
+        ≙
     </div>
+    <input type="submit" class="submit" onclick="verarbeiteSubmitClick()">
+    <input type="number" step="any" class="ausgangsWert" placeholder="Ausgangswert" id="ausgangsWert">
+    <div class="endWertAusgaben" id="endWertAusgaben"> 
+        <p class = "endWertAusgabeWert" id="endWertAusgabeWert"> </p>
+        <p class = "endWertAusgabeKonstanten" id="endWertAusgabeKonstanten"> </p>
+    </div>
+    
+    <form>
+        <select class="dropdown1" id="dropdownZiel" disabled>
+            <option value=""> Zieleinheit </option>
+            <option value="kg"> kg </option>
+            <option value="g" > g </option>
+            <option value="mg" > mg </option>
+            <option value="mug" > µg </option>
+            <option value="ng" > ng </option>
+            <option value="pg"  > pg </option>
+            <option value="ag" > ag </option>
+            <option value="zg" > zg </option>
+            <option value="yg" > yg </option>
+            <option value="s" > s </option>
+            <option value="ps" > ps </option>
+            <option value="as" > as </option>
+            <option value="eV" > eV </option>
+            <option value="keV" > keV </option>
+            <option value="MeV" > MeV </option>
+            <option value="GeV" > GeV </option>
+            <option value="m" > m </option>
+            <option value="K" > K </option>
+            <option value="kgMalmPros" > kg ⋅ m/s </option>
+            <option value="mPros" > m/s </option>
+
+        </select>
+    </form>
     <div class="dropdown">
         <button class="dropbtn dropbtn-start" id="buttonAusgangseinheit">Ausgangseinheit</button>
         <div class="dropdown-content" id="dropbtn">
@@ -73,15 +78,17 @@
             <button onclick="setAusgangseinheit('mPros')"> m/s </button>
         </div>
     </div>
-    
-    <div class="entsprichtZeichen">
-        ≙
-    </div>
-    <input type="submit" class="submit" onclick="verarbeiteSubmitClick()">
-    <input type="number" step="any" class="ausgangsWert" placeholder="Ausgangswert" id="ausgangsWert">
-    <div class="endWertAusgaben" id="endWertAusgaben"> 
-        <p class = "endWertAusgabeWert" id="endWertAusgabeWert">  </p>
-        <p class = "endWertAusgabeKonstanten" id="endWertAusgabeKonstanten"> </p>
+
+    <div class="dropdownDimension">
+        <button class="dropbtn dropbtn-dimension" id="buttonDimension">Dimension</button>
+        <div class="dropdown-contentDimension" id="dropbtnDimension">
+            <button onclick="setDimension('Masse')"> Masse </button>
+            <button onclick="setDimension('Zeit')"> Zeit </button>
+            <button onclick="setDimension('Länge')"> Länge </button>
+            <button onclick="setDimension('Energie')"> Energie </button>
+            <button onclick="setDimension('Kraft')"> Kraft </button>
+            <button onclick="setDimension('Geschwindigkeit')"> Geschwindigkeit </button>
+        </div>
     </div>
 
     <script src="index.js"> </script>

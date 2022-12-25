@@ -1,6 +1,7 @@
 .entsprichtZeichen,
 .dropdown,
 .dropdown1,
+.dropdownDimension,
 .ausgangsWert,
 .submit, 
 .dropbtn, 
@@ -27,7 +28,8 @@
 }
 
 .dropdown-content,
-.dropdown-content1 {
+.dropdown-content1,
+.dropdown-contentDimension {
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
@@ -41,7 +43,8 @@
 }
 
 .dropdown-content button,
-.dropdown-content1 button {
+.dropdown-content1 button,
+.dropdown-contentDimension button {
     box-sizing: border-box;
     color: black;
     width: 100%;
@@ -52,13 +55,16 @@
 
 .dropdown-content button:hover,
 .dropdown-content1 button:hover,
+.dropdown-contentDimension button:hover,
 .dropdown:hover .dropbtn,
-.dropdown1:hover .dropbtn {
+.dropdown1:hover .dropbtn,
+.dropdownDimension:hover .dropbtn {
     background-color: #ddd;
 }
 
 .dropdown:hover .dropdown-content,
-.dropdown1:hover .dropdown-content1 {
+.dropdown1:hover .dropdown-content1,
+.dropdownDimension:hover .dropdown-contentDimension {
     display: block;
 }
 
@@ -67,44 +73,54 @@
     width: 80%;
 }
 
+.dropbtn-dimension {
+    top:20%;
+    left: 30%;
+}
+
+.dropdownDimension {
+    top: 30%;
+    left: 30%;
+}
+
 .ausgangsWert {
-    top: 20%;
+    top: 40%;
     left: 10%;
 }
 
-.dropbtn-start, 
-.dropdown {
-    top: 20%;
+.dropbtn-start {
+    top: 40%;
     left: 50%;
 }
 
 .dropdown {
-    top: 30%;
+    top: 50%;
+    left: 50%;
 }
 
 .entsprichtZeichen {
-    top: 20%;
+    top: 40%;
     left: 82%;
     font-size: 500%;
 }
 
 .endWertAusgaben{
-    top: 40%;
+    top: 60%;
     left: 10%;
 }
 
-.dropbtn-ziel,
-.dropdown1 {
-    top: 40%;
+.dropbtn-ziel {
+    top: 60%;
     left: 50%;
 }
 
 .dropdown1 {
-    top: 50%;
+    top: 70%;
+    left: 50%;
 }
 
 .submit {
-    top: 60%;
+    top: 80%;
     left: 30%;
     z-index: -1;
 }
