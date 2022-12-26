@@ -1,15 +1,42 @@
-var ausgangsEinheit;
-var zielEinheit;
-var ausgangsWert;
-var ergebnis;
-const c = 299792458;
-const hq = 6.6260693 * Math.pow(10, -34);
-const e = 1.602176634 * Math.pow(10, -19);
-const elFeldkonstante = 8.854187817 * Math.pow(10, -12);
-
 function getZieleinheit() {
   return document.getElementById("dropdownZiel").value;
 }
+class Konstante {
+  constructor(vorFaktor, zehnerExponent) {
+    this.vorFaktor = vorFaktor;
+    this.zehnerExponent = zehnerExponent;
+  }
+  hoch(exponent) {
+    return new Konstante(Math.pow(this.vorFaktor, exponent), this.zehnerExponent * exponent);
+  }
+  multiplizieren(pKonstante) {
+    return new Konstante(this.vorFaktor * pKonstante.vorFaktor, this.zehnerExponent + pKonstante.zehnerExponent);
+  }
+  alsZahl() {
+    return this.vorFaktor * Math.pow(10, this.zehnerExponent);
+  }
+  bringeAufRichtigeZehnerPotenz() {
+    let neuerVorFaktor = this.vorFaktor;
+    let neuerZehnerExponent = this.zehnerExponent;
+    while (Math.abs(neuerVorFaktor) >= 10) {
+      neuerVorFaktor = this.vorFaktor / 10;
+      neuerZehnerExponent++;
+    }
+    while (Math.abs(neuerVorFaktor) < 1 && neuerVorFaktor !== 0) {
+      neuerVorFaktor = this.vorFaktor * 10;
+      neuerZehnerExponent--;
+    }
+    return new Konstante(neuerVorFaktor, neuerZehnerExponent);
+  }
+}
+
+var ausgangsEinheit;
+var ausgangsWert;
+var ergebnis;
+const c = new Konstante(2.99792458, 8);
+const hq = new Konstante(1.054571817, -34);
+const e = new Konstante(1.602176634, -19);
+const elFeldkonstante = new Konstante(8.854187817, -12);
 
 class Faktor {
   constructor(vorFaktor, listeExponenten) {
@@ -17,8 +44,12 @@ class Faktor {
     this.vorFaktor = vorFaktor;
   }
 
-  getWertOhneZehnerPotenz() {
-    return this.vorFaktor * Math.pow(c, this.listeExponenten[1]) * Math.pow(hq, this.listeExponenten[2]) * Math.pow(e, this.listeExponenten[3]) * Math.pow(elFeldkonstante, this.listeExponenten[4]);
+  alsWert() {
+    return new Konstante(this.vorFaktor, this.listeExponenten[0])
+      .multiplizieren(c.hoch(this.listeExponenten[1]))
+      .multiplizieren(hq.hoch(this.listeExponenten[2]))
+      .multiplizieren(e.hoch(this.listeExponenten[3]))
+      .multiplizieren(elFeldkonstante.hoch(this.listeExponenten[4]));
   }
 
   multiplizieren(pFaktor) {
@@ -96,9 +127,8 @@ class Dimension {
     for (let i = 0; i < this.listeEinheiten.length; i++) {
       let id = this.listeEinheiten[i].getId();
       // TODO nicht nur dropdownZiel, sondern beides!!!
-      const option = document.querySelector('#dropdownZiel option[value=' + id +  ']')
+      const option = document.querySelector("#dropdownZiel option[value=" + id + "]");
       option.hidden = !sichbarkeit;
-  
     }
   }
 }
@@ -154,10 +184,13 @@ let W = new BasisEinheit(V.faktorIntraDimensional.multiplizieren(A.faktorIntraDi
 let J = new BasisEinheit(undefined, "J");
 
 //Ladung
-let C = new BasisEinheit(A.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional), "C");
+let C = new BasisEinheit(new Faktor(1, [0, -0.5, -0.5, 0, -0.5]), "C");
 
 //Ladungsdichte
-let CProm3 = new BasisEinheit(C.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional))), "CProm3");
+let CProm3 = new BasisEinheit(
+  C.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional))),
+  "CProm3"
+);
 
 //Stromdichte
 
@@ -212,6 +245,8 @@ let einheiten = new Map([
   ["kgMalmPros", kgMalmPros],
 
   ["mPros", mPros],
+
+  ["C", C],
   //['', ],
   //['neueEinheit', neueEinheit],
 ]);
@@ -238,9 +273,7 @@ function setDimension(dimension) {
   document.getElementById("buttonDimension").textContent = dimension;
 
   let rechenDimension = dimension.toLowerCase().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
-  console.log(rechenDimension);
   alleDimensionenVerstecken();
-  console.log(dimensionen.get(rechenDimension).listeEinheiten);
   dimensionen.get(rechenDimension).setSichbarkeit(true);
   // TODO hier auch das andere nicht-disablen!
   document.getElementById("dropdownZiel").disabled = false;
@@ -259,7 +292,7 @@ function alleDimensionenVerstecken() {
   for (let i = 0; i < natuerlicheEinheiten.length; i++) {
     let id = natuerlicheEinheiten[i].getId();
     // TODO eine Methode, die auch in setSichtbarkeit aufgerufen wird!
-    const option = document.querySelector('#dropdownZiel option[value=' + id +  ']')
+    const option = document.querySelector("#dropdownZiel option[value=" + id + "]");
     option.hidden = false;
   }
 }
@@ -275,18 +308,8 @@ function setAusgangseinheit(einheit) {
   document.getElementById("buttonAusgangseinheit").textContent = einheit;
 }
 
-function setZieleinheit(einheit) {
-  zielEinheit = einheit;
-  if (zielEinheit == "kgMalmPros") {
-    einheit = "kg ⋅ m/s";
-  }
-  if (zielEinheit == "mPros") {
-    einheit = "m/s";
-  }
-}
-
 function verarbeiteSubmitClick() {
-  if (ausgangsEinheit == undefined || !getZieleinheit()|| document.getElementById("ausgangsWert").value == "") {
+  if (ausgangsEinheit == undefined || !getZieleinheit() || document.getElementById("ausgangsWert").value == "") {
     return;
   }
   ausgangsWert = new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0]);
@@ -299,29 +322,13 @@ function verarbeiteSubmitClick() {
 }
 
 function zeigeErgebnisAn(ergebnis) {
-  let ergebnisOhneZehnerPotenz = new Faktor(ergebnis.getWertOhneZehnerPotenz(), [0, 0, 0, 0, 0]);
-  ergebnisOhneZehnerPotenz.bringeAufRichtigeZehnerPotenz();
-  let ausgabeVorFaktor = ergebnisOhneZehnerPotenz.vorFaktor;
-  let zehnerExponent = ergebnis.listeExponenten[0] + ergebnisOhneZehnerPotenz.listeExponenten[0];
-  let ausgabe10Exponent = " * 10^" + zehnerExponent;
-  if (zehnerExponent == 0) {
-    ausgabe10Exponent = "";
-  } else if (zehnerExponent <= 3 && zehnerExponent >= 1) {
-    ausgabe10Exponent = "";
-    ausgabeVorFaktor = ausgabeVorFaktor * Math.pow(10, zehnerExponent);
-  }
-  if (ausgabeVorFaktor == 1) {
-    if (ausgabe10Exponent == "") {
-      ausgabeVorFaktor = 1;
-    } else {
-      ausgabeVorFaktor = "";
-      ausgabe10Exponent = ausgabe10Exponent.replace(" * ", "");
-    }
-  }
-  if (ausgabeVorFaktor == 0) {
-    ausgabe10Exponent = "";
-  }
-  document.getElementById("endWertAusgabeWert").textContent = ausgabeVorFaktor + ausgabe10Exponent;
+  //Wert gerundet
+
+  let gerundetesErgebnis = ergebnis.alsWert().bringeAufRichtigeZehnerPotenz();
+  let ausgabe = toGerundetesErgebnisString(gerundetesErgebnis);
+  document.getElementById("endWertAusgabeWert").textContent = ausgabe;
+  //Variablen
+
   ergebnis.bringeAufRichtigeZehnerPotenz();
   let konstAusgabe = "";
   if (ergebnis.listeExponenten[0] <= 3 && ergebnis.listeExponenten[0] >= 1) {
@@ -335,25 +342,49 @@ function zeigeErgebnisAn(ergebnis) {
     konstAusgabe += " * c^" + ergebnis.listeExponenten[1];
   }
   if (ergebnis.listeExponenten[2] == 1) {
-    konstAusgabe += " * hq";
+    konstAusgabe += " * ℏ";
   } else if (ergebnis.listeExponenten[2] !== 0) {
-    konstAusgabe += " * hq^" + ergebnis.listeExponenten[2];
+    konstAusgabe += " * ℏ^" + ergebnis.listeExponenten[2];
   }
   if (ergebnis.listeExponenten[3] == 1) {
     konstAusgabe += " * e";
   } else if (ergebnis.listeExponenten[3] !== 0) {
     konstAusgabe += " * e^" + ergebnis.listeExponenten[3];
   }
+  if (ergebnis.listeExponenten[4] == 1) {
+    konstAusgabe += " * ε₀";
+  } else if (ergebnis.listeExponenten[4] !== 0) {
+    konstAusgabe += " * ε₀^" + ergebnis.listeExponenten[4];
+  }
   if (ergebnis.vorFaktor == 1) {
     konstAusgabe = konstAusgabe.replace(" * ", "");
   } else {
     konstAusgabe = ergebnis.vorFaktor + "" + konstAusgabe;
   }
-  if (konstAusgabe == ausgabeVorFaktor + ausgabe10Exponent) {
+  if (konstAusgabe == ausgabe) {
     document.getElementById("endWertAusgabeKonstanten").textContent = "";
     return;
   }
   document.getElementById("endWertAusgabeKonstanten").textContent = konstAusgabe;
+}
+
+function toGerundetesErgebnisString(gerundetesErgebnis) {
+  if (gerundetesErgebnis.vorFaktor == 1 && gerundetesErgebnis.zehnerExponent == 0) {
+    return "1";
+  }
+  if (gerundetesErgebnis.zehnerExponent == 0) {
+    return gerundetesErgebnis.vorFaktor;
+  }
+  if (gerundetesErgebnis.zehnerExponent <= 3 && gerundetesErgebnis.zehnerExponent >= 1) {
+    return gerundetesErgebnis.vorFaktor * Math.pow(10, gerundetesErgebnis.zehnerExponent);
+  }
+  if (gerundetesErgebnis.vorFaktor == 1) {
+    return "10^" + gerundetesErgebnis.zehnerExponent;
+  }
+  if (gerundetesErgebnis.vorFaktor == 0) {
+    return 0;
+  }
+  return gerundetesErgebnis.vorFaktor + " * 10^" + gerundetesErgebnis.zehnerExponent;
 }
 
 function berechneErgebnis() {
@@ -378,11 +409,3 @@ function berechneErgebnis() {
 //   font-size: 16px;
 //   border: black;
 // }
-
-const selectElement = document.getElementById("dropdownZiel");
-
-function zielEinheitVeraendert(event) {
-  const einheit = event.target.value;
-  setZieleinheit(einheit);
-}
-selectElement.addEventListener('change',  zielEinheitVeraendert); 
