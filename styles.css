@@ -3,124 +3,66 @@
 .dropdown1,
 .dropdownDimension,
 .ausgangsWert,
-.submit, 
-.dropbtn, 
-.endWertAusgaben{
-    box-sizing: border-box;
-    height: 10%;
-    width: 30%;
-    position: fixed;
-    display: inline-block;
+.submit,
+.endWertAusgaben {
+  box-sizing: border-box;
+  height: 10%;
+  width: 30%;
+  position: fixed;
 }
 
 .submit,
 .ausgangsWert,
-.dropbtn,
 .endWertAusgaben {
-    padding: 5px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    background-color: #eeeded;
-    border-style: solid;
-    border-color: rgb(0, 0, 0);
-    border-width: 1px;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: #eeeded;
+  border-style: solid;
+  border-color: rgb(0, 0, 0);
+  border-width: 1px;
 }
 
-.dropdown-content,
-.dropdown-content1,
-.dropdown-contentDimension {
-    box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: auto;
-    max-height: 500%;
-    display: none;
-    position: absolute;
-    background-color: #f1f10f10;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 2;
-}
-
-.dropdown-content button,
-.dropdown-content1 button,
-.dropdown-contentDimension button {
-    box-sizing: border-box;
-    color: black;
-    width: 100%;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content button:hover,
-.dropdown-content1 button:hover,
-.dropdown-contentDimension button:hover,
 .dropdown:hover .dropbtn,
 .dropdown1:hover .dropbtn,
 .dropdownDimension:hover .dropbtn {
-    background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content,
-.dropdown1:hover .dropdown-content1,
-.dropdownDimension:hover .dropdown-contentDimension {
-    display: block;
-}
-
-.endWertAusgabeWert,
-.endWertAusgabeKonstanten {
-    width: 80%;
-}
-
-.dropbtn-dimension {
-    top:20%;
-    left: 30%;
+  background-color: #ddd;
 }
 
 .dropdownDimension {
-    top: 30%;
-    left: 30%;
+  top: 30%;
+  left: 30%;
 }
 
 .ausgangsWert {
-    top: 40%;
-    left: 10%;
-}
-
-.dropbtn-start {
-    top: 40%;
-    left: 50%;
+  top: 40%;
+  left: 10%;
 }
 
 .dropdown {
-    top: 50%;
-    left: 50%;
+  top: 50%;
+  left: 50%;
 }
 
 .entsprichtZeichen {
-    top: 40%;
-    left: 82%;
-    font-size: 500%;
+  top: 40%;
+  left: 82%;
+  font-size: 500%;
 }
 
-.endWertAusgaben{
-    top: 60%;
-    left: 10%;
-}
-
-.dropbtn-ziel {
-    top: 60%;
-    left: 50%;
+.endWertAusgaben {
+  top: 60%;
+  left: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .dropdown1 {
-    top: 70%;
-    left: 50%;
+  top: 70%;
+  left: 50%;
 }
 
 .submit {
-    top: 80%;
-    left: 30%;
-    z-index: -1;
+  top: 80%;
+  left: 30%;
 }
