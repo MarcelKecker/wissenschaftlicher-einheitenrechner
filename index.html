@@ -21,7 +21,6 @@
         <p class = "endWertAusgabeKonstanten" id="endWertAusgabeKonstanten"> </p>
     </div>
     
-    <form>
         <select class="dropdown1" id="dropdownZiel" disabled>
             <option value=""> Zieleinheit </option>
             <option value="kg"> kg </option>
@@ -45,54 +44,40 @@
             <option value="kgMalmPros" > kg ⋅ m/s </option>
             <option value="mPros" > m/s </option>
             <option value="C" > C </option>
-
         </select>
-    </form>
-    <div class="dropdown">
-        <button class="dropbtn dropbtn-start" id="buttonAusgangseinheit">Ausgangseinheit</button>
-        <div class="dropdown-content" id="dropbtn">
-            <button onclick="setAusgangseinheit('kg')"> kg </button>
-            <button onclick="setAusgangseinheit('g')"> g </button>
-            <button onclick="setAusgangseinheit('mg')"> mg </button>
-            <button onclick="setAusgangseinheit('ng')"> ng </button>
-            <button onclick="setAusgangseinheit('mug')"> mug </button>
-            <button onclick="setAusgangseinheit('pg')"> pg </button>
-            <button onclick="setAusgangseinheit('ag')"> ag </button>
-            <button onclick="setAusgangseinheit('zg')"> zg </button>
-            <button onclick="setAusgangseinheit('yg')"> yg </button>
-
-            <button onclick="setAusgangseinheit('s')"> s </button>
-            <button onclick="setAusgangseinheit('ps')"> ps </button>
-            <button onclick="setAusgangseinheit('as')"> as </button>
-
-            <button onclick="setAusgangseinheit('eV')"> eV </button>
-            <button onclick="setAusgangseinheit('GeV')"> keV </button>
-            <button onclick="setAusgangseinheit('GeV')"> MeV </button>
-            <button onclick="setAusgangseinheit('GeV')"> GeV </button>
-
-            <button onclick="setAusgangseinheit('m')"> m </button>
-
-            <button onclick="setAusgangseinheit('K')"> K </button>
-
-            <button onclick="setAusgangseinheit('kgMalmPros')"> kg ⋅ m/s </button>
-
-            <button onclick="setAusgangseinheit('mPros')"> m/s </button>
-            <button onclick="setAusgangseinheit('C')"> C </button>
-        </div>
-    </div>
-
-    <div class="dropdownDimension">
-        <button class="dropbtn dropbtn-dimension" id="buttonDimension">Dimension</button>
-        <div class="dropdown-contentDimension" id="dropbtnDimension">
-            <button onclick="setDimension('Masse')"> Masse </button>
-            <button onclick="setDimension('Zeit')"> Zeit </button>
-            <button onclick="setDimension('Länge')"> Länge </button>
-            <button onclick="setDimension('Energie')"> Energie </button>
-            <button onclick="setDimension('Kraft')"> Kraft </button>
-            <button onclick="setDimension('Geschwindigkeit')"> Geschwindigkeit </button>
-        </div>
-    </div>
-
+        <select class="dropdown" id="dropdownStart" disabled>
+            <option value=""> Zieleinheit </option>
+            <option value="kg"> kg </option>
+            <option value="g" > g </option>
+            <option value="mg" > mg </option>
+            <option value="mug" > µg </option>
+            <option value="ng" > ng </option>
+            <option value="pg"  > pg </option>
+            <option value="ag" > ag </option>
+            <option value="zg" > zg </option>
+            <option value="yg" > yg </option>
+            <option value="s" > s </option>
+            <option value="ps" > ps </option>
+            <option value="as" > as </option>
+            <option value="eV" > eV </option>
+            <option value="keV" > keV </option>
+            <option value="MeV" > MeV </option>
+            <option value="GeV" > GeV </option>
+            <option value="m" > m </option>
+            <option value="K" > K </option>
+            <option value="kgMalmPros" > kg ⋅ m/s </option>
+            <option value="mPros" > m/s </option>
+            <option value="C" > C </option>
+        </select>
+        <select class="dropdownDimension" id="dropdownDimension" onchange="dimensionVeraendert()">
+            <option value=""> Dimension </option>
+            <option value="Masse"> Masse </option>
+            <option value="Zeit" > Zeit </option>
+            <option value="Länge" > Länge </option>
+            <option value="Energie" > Energie </option>
+            <option value="Kraft" > Kraft </option>
+            <option value="Geschwindigkeit"  > Geschwindigkeit </option>
+        </select>
     <script src="index.js"> </script>
 </body>
 

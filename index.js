@@ -1,6 +1,21 @@
 function getZieleinheit() {
   return document.getElementById("dropdownZiel").value;
 }
+function getAusgangseinheit() {
+  return document.getElementById("dropdownStart").value;
+}
+function getDimension() {
+  return document.getElementById("dropdownDimension").value;
+}
+function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
+  for (let i = 0; i < einheiten.length; i++) {
+    let id = einheiten[i].getId();
+    const option = document.querySelector("#dropdownZiel option[value=" + id + "]");
+    option.hidden = !sichbarkeit;
+    const option1 = document.querySelector("#dropdownStart option[value=" + id + "]");
+    option1.hidden = !sichbarkeit;
+  }
+}
 class Konstante {
   constructor(vorFaktor, zehnerExponent) {
     this.vorFaktor = vorFaktor;
@@ -123,92 +138,38 @@ class Dimension {
   constructor(listeEinheiten) {
     this.listeEinheiten = listeEinheiten;
   }
-  setSichbarkeit(sichbarkeit) {
-    for (let i = 0; i < this.listeEinheiten.length; i++) {
-      let id = this.listeEinheiten[i].getId();
-      // TODO nicht nur dropdownZiel, sondern beides!!!
-      const option = document.querySelector("#dropdownZiel option[value=" + id + "]");
-      option.hidden = !sichbarkeit;
-    }
+}
+
+let einheiten = new Map();
+let dimensionen = new Map();
+
+function erstellenDimensionUndEinheiten(optionen) {
+  let alleEinheitenDieserDimension = [];
+  let basisEinheit = new BasisEinheit(optionen.basisEinheit.faktor, optionen.basisEinheit.id);
+
+  alleEinheitenDieserDimension.push(basisEinheit);
+  einheiten.set(optionen.basisEinheit.id, basisEinheit);
+  for (let unterEinheitId in optionen.unterEinheiten) {
+    let faktor = optionen.unterEinheiten[unterEinheitId];
+    let unterEinheit = new UnterEinheit(basisEinheit, faktor, unterEinheitId);
+    alleEinheitenDieserDimension.push(unterEinheit);
+    einheiten.set(unterEinheitId, unterEinheit);
   }
+
+  let dimension = new Dimension(alleEinheitenDieserDimension);
+  dimensionen.set(optionen.id, dimension);
+}
+
+function faktorVonZehnerExponent(zehnerExponent) {
+  return new Faktor(1, [zehnerExponent, 0, 0, 0, 0]);
+}
+
+function faktorVonVorFaktor(vorFaktor) {
+  return new Faktor(vorFaktor, [0, 0, 0, 0, 0]);
 }
 
 // neue Einheit hinzufügen: -> index.html buttons hinzufügen
 //
-
-//Länge
-let m = new BasisEinheit(new Faktor(1, [0, -1, -1, 1, 0]), "m");
-
-//Masse
-let kg = new BasisEinheit(new Faktor(1, [0, 2, 0, -1, 0]), "kg");
-let g = new UnterEinheit(kg, new Faktor(1, [-3, 0, 0, 0, 0]), "g");
-let mg = new UnterEinheit(kg, new Faktor(1, [-6, 0, 0, 0, 0]), "mg");
-let mug = new UnterEinheit(kg, new Faktor(1, [-9, 0, 0, 0, 0]), "mug");
-let ng = new UnterEinheit(kg, new Faktor(1, [-12, 0, 0, 0, 0]), "ng");
-let pg = new UnterEinheit(kg, new Faktor(1, [-15, 0, 0, 0, 0]), "pg");
-let ag = new UnterEinheit(kg, new Faktor(1, [-18, 0, 0, 0, 0]), "ag");
-let zg = new UnterEinheit(kg, new Faktor(1, [-21, 0, 0, 0, 0]), "zg");
-let yg = new UnterEinheit(kg, new Faktor(1, [-24, 0, 0, 0, 0]), "yg");
-
-//Zeit
-let s = new BasisEinheit(new Faktor(1, [0, 0, -1, 1, 0]), "s");
-let ps = new UnterEinheit(s, new Faktor(1, [-12, 0, 0, 0, 0]), "ps");
-let as = new UnterEinheit(s, new Faktor(1, [-15, 0, 0, 0, 0]), "as");
-
-//Frequenz
-let f = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0]).dividieren(s.faktorIntraDimensional), "f");
-
-//Geschwindigkeit
-let mPros = new BasisEinheit(m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional), "mPros");
-
-//Beschleunigung
-let mPros2 = new BasisEinheit(undefined, "mPros2");
-
-//Impuls
-let kgMalmPros = new BasisEinheit(kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional), "kgMalmPros");
-
-//Kraft
-let N = new BasisEinheit(kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional)), "N");
-
-//Spannung
-let V = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0]), "V");
-
-//Stromstärke
-//TODO richtiger Faktor
-let A = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0]), "A");
-
-//Leistung
-let W = new BasisEinheit(V.faktorIntraDimensional.multiplizieren(A.faktorIntraDimensional), "W");
-
-//Energie
-let J = new BasisEinheit(undefined, "J");
-
-//Ladung
-let C = new BasisEinheit(new Faktor(1, [0, -0.5, -0.5, 0, -0.5]), "C");
-
-//Ladungsdichte
-let CProm3 = new BasisEinheit(
-  C.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional))),
-  "CProm3"
-);
-
-//Stromdichte
-
-//Elektrische Feldstärke
-
-//Potenzial
-
-//Druck
-let Pa = new BasisEinheit(undefined, "Pa");
-
-//Dichte
-
-//Fläche
-
-//Volumen
-
-//Temperatur
-let K = new BasisEinheit(kg.faktorIntraDimensional.multiplizieren(new Faktor(1, [0, 0, 0, -1, 0])), "K");
 
 //Natürliche Einheiten
 let eV = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0]), "eV");
@@ -217,99 +178,203 @@ let MeV = new UnterEinheit(eV, new Faktor(1, [6, 0, 0, 0, 0]), "MeV");
 let GeV = new UnterEinheit(eV, new Faktor(1, [9, 0, 0, 0, 0]), "GeV");
 
 let natuerlicheEinheiten = [eV, keV, MeV, GeV];
+for (let natuerlicheEinheit of natuerlicheEinheiten) {
+  einheiten.set(natuerlicheEinheit.id, natuerlicheEinheit);
+}
 
-let einheiten = new Map([
-  ["kg", kg],
-  ["g", g],
-  ["mg", mg],
-  ["mug", mug],
-  ["ng", ng],
-  ["pg", pg],
-  ["ag", ag],
-  ["zg", zg],
-  ["yg", yg],
+erstellenDimensionUndEinheiten({
+  id: "laenge",
+  basisEinheit: {
+    id: "m",
+    faktor: new Faktor(1, [0, -1, -1, 1, 0]),
+  },
+  unterEinheiten: {},
+});
+let m = einheiten.get("m");
 
-  ["s", s],
-  ["ps", ps],
-  ["as", as],
+erstellenDimensionUndEinheiten({
+  id: "masse",
+  basisEinheit: {
+    id: "kg",
+    faktor: new Faktor(1, [0, 2, 0, -1, 0]),
+  },
+  unterEinheiten: {
+    g: faktorVonZehnerExponent(-3),
+    mg: faktorVonZehnerExponent(-6),
+    mug: faktorVonZehnerExponent(-9),
+    ng: faktorVonZehnerExponent(-12),
+    pg: faktorVonZehnerExponent(-15),
+    ag: faktorVonZehnerExponent(-18),
+    zg: faktorVonZehnerExponent(-21),
+    yg: faktorVonZehnerExponent(-24),
+  },
+});
 
-  ["eV", eV],
-  ["keV", keV],
-  ["MeV", MeV],
-  ["GeV", GeV],
+let kg = einheiten.get("kg");
 
-  ["m", m],
+erstellenDimensionUndEinheiten({
+  id: "zeit",
+  basisEinheit: {
+    id: "s",
+    faktor: new Faktor(1, [0, 0, -1, 1, 0]),
+  },
+  unterEinheiten: {
+    ps: faktorVonZehnerExponent(-12),
+    as: faktorVonZehnerExponent(-15),
+  },
+});
 
-  ["K", K],
+let s = einheiten.get("s");
 
-  ["kgMalmPros", kgMalmPros],
+erstellenDimensionUndEinheiten({
+  id: "ladung",
+  basisEinheit: {
+    id: "C",
+    faktor: new Faktor(1, [0, -0.5, -0.5, 0, -0.5]),
+  },
+  unterEinheiten: {},
+});
+let C = einheiten.get("C");
 
-  ["mPros", mPros],
+erstellenDimensionUndEinheiten({
+  id: "frequenz",
+  basisEinheit: {
+    id: "f",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]).dividieren(s.faktorIntraDimensional),
+  },
+  unterEinheiten: {},
+});
 
-  ["C", C],
-  //['', ],
-  //['neueEinheit', neueEinheit],
-]);
+erstellenDimensionUndEinheiten({
+  id: "geschwindigkeit",
+  basisEinheit: {
+    id: "mPros",
+    faktor: m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional),
+  },
+  unterEinheiten: {},
+});
 
-let masse = new Dimension([kg, g, mg, mug, ng, pg, ag, zg, yg]);
-let zeit = new Dimension([s, ps, as]);
-let laenge = new Dimension([m]);
-let energie = new Dimension([eV, keV, MeV, GeV]);
-let kraft = new Dimension([]);
-let geschwindigkeit = new Dimension([mPros]);
+erstellenDimensionUndEinheiten({
+  id: "beschleunigung",
+  basisEinheit: {
+    id: "mPros2",
+    faktor: m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional)),
+  },
+  unterEinheiten: {},
+});
 
-let dimensionen = new Map([
-  ["masse", masse],
-  ["zeit", zeit],
-  ["laenge", laenge],
-  ["energie", energie],
-  ["kraft", kraft],
-  ["geschwindigkeit", geschwindigkeit],
-  //['', ],
-  //['neueEinheit', neueEinheit],
-]);
+erstellenDimensionUndEinheiten({
+  id: "impuls",
+  basisEinheit: {
+    id: "kgMalmPros",
+    faktor: kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional),
+  },
+  unterEinheiten: {},
+});
 
-function setDimension(dimension) {
-  document.getElementById("buttonDimension").textContent = dimension;
+erstellenDimensionUndEinheiten({
+  id: "kraft",
+  basisEinheit: {
+    id: "N",
+    faktor: kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional)),
+  },
+  unterEinheiten: {},
+});
 
+erstellenDimensionUndEinheiten({
+  id: "spannung",
+  basisEinheit: {
+    id: "V",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+  },
+  unterEinheiten: {},
+});
+
+erstellenDimensionUndEinheiten({
+  id: "stromstaerke",
+  basisEinheit: {
+    id: "A",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+  },
+  unterEinheiten: {},
+});
+
+erstellenDimensionUndEinheiten({
+  id: "leistung",
+  basisEinheit: {
+    id: "W",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch, evtl. V.faktorIntraDimensional.multiplizieren(A.faktorIntraDimensional)
+  },
+  unterEinheiten: {},
+});
+
+erstellenDimensionUndEinheiten({
+  id: "energie",
+  basisEinheit: {
+    id: "J",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+  },
+  unterEinheiten: {},
+});
+
+erstellenDimensionUndEinheiten({
+  id: "ladungsdichte",
+  basisEinheit: {
+    id: "CProm3",
+    faktor: C.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional))),
+  },
+  unterEinheiten: {},
+});
+
+//Stromdichte
+
+//Elektrische Feldstärke
+
+//Potenzial
+
+erstellenDimensionUndEinheiten({
+  id: "druck",
+  basisEinheit: {
+    id: "Pa",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+  },
+  unterEinheiten: {},
+});
+//Dichte
+
+//Fläche
+
+//Volumen
+
+erstellenDimensionUndEinheiten({
+  id: "temperatur",
+  basisEinheit: {
+    id: "K",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch, evt. kg.faktorIntraDimensional.multiplizieren(new Faktor(1, [0, 0, 0, -1, 0])) ?
+  },
+  unterEinheiten: {},
+});
+
+function dimensionVeraendert() {
+  let dimension = getDimension();
   let rechenDimension = dimension.toLowerCase().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
-  alleDimensionenVerstecken();
-  dimensionen.get(rechenDimension).setSichbarkeit(true);
-  // TODO hier auch das andere nicht-disablen!
+  zuruecksetzenDroppdownOptionen();
+  setDropdownOptionSichtbarkeit(dimensionen.get(rechenDimension).listeEinheiten, true);
+
   document.getElementById("dropdownZiel").disabled = false;
+  document.getElementById("dropdownStart").disabled = false;
 
   //let newButton = createElement(button);
   //document.body.insertBefore(newButton, null)
 }
 
-function alleDimensionenVerstecken() {
-  masse.setSichbarkeit(false);
-  zeit.setSichbarkeit(false);
-  laenge.setSichbarkeit(false);
-  energie.setSichbarkeit(false);
-  kraft.setSichbarkeit(false);
-  geschwindigkeit.setSichbarkeit(false);
-  for (let i = 0; i < natuerlicheEinheiten.length; i++) {
-    let id = natuerlicheEinheiten[i].getId();
-    // TODO eine Methode, die auch in setSichtbarkeit aufgerufen wird!
-    const option = document.querySelector("#dropdownZiel option[value=" + id + "]");
-    option.hidden = false;
-  }
-}
-
-function setAusgangseinheit(einheit) {
-  ausgangsEinheit = einheit;
-  if (ausgangsEinheit == "kgMalmPros") {
-    einheit = "kg ⋅ m/s";
-  }
-  if (ausgangsEinheit == "mPros") {
-    einheit = "m/s";
-  }
-  document.getElementById("buttonAusgangseinheit").textContent = einheit;
+function zuruecksetzenDroppdownOptionen() {
+  setDropdownOptionSichtbarkeit(einheiten, false);
+  setDropdownOptionSichtbarkeit(natuerlicheEinheiten, true);
 }
 
 function verarbeiteSubmitClick() {
-  if (ausgangsEinheit == undefined || !getZieleinheit() || document.getElementById("ausgangsWert").value == "") {
+  if (!getAusgangseinheit() || !getZieleinheit() || document.getElementById("ausgangsWert").value == "") {
     return;
   }
   ausgangsWert = new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0]);
@@ -388,24 +453,8 @@ function toGerundetesErgebnisString(gerundetesErgebnis) {
 }
 
 function berechneErgebnis() {
-  let ausgangsEinheit1 = einheiten.get(ausgangsEinheit);
+  let ausgangsEinheit1 = einheiten.get(getAusgangseinheit());
   let zielEinheit1 = einheiten.get(getZieleinheit());
   let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
   return ergebnis;
 }
-//temp
-
-// .dropbtn {
-//   box-sizing: border-box;
-//   height: 10%;
-//   width: 10%;
-//   position: fixed;
-//   top: 50%;
-//   margin-top: -100px;
-//   margin-left: -200px;
-//   background-color: #f1f1f1;
-//   color: black;
-//   padding: 0px;
-//   font-size: 16px;
-//   border: black;
-// }
