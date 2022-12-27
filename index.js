@@ -360,9 +360,18 @@ erstellenDimensionUndEinheiten({
 });
 
 function dimensionVeraendert() {
-  let dimension = getDimension();
-  let rechenDimension = dimension.toLowerCase().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
+  document.getElementById("dropdownZiel").value = "";
+  document.getElementById("dropdownStart").value = "";
+
   zuruecksetzenDroppdownOptionen();
+  let dimension = getDimension();
+  if (dimension == "") {
+    document.getElementById("dropdownZiel").disabled = true;
+    document.getElementById("dropdownStart").disabled = true;
+  
+    return;
+  }
+  let rechenDimension = dimension.toLowerCase().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
   setDropdownOptionSichtbarkeit(dimensionen.get(rechenDimension).listeEinheiten, true);
 
   document.getElementById("dropdownZiel").disabled = false;
