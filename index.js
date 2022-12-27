@@ -8,8 +8,8 @@ function getDimension() {
   return document.getElementById("dropdownDimension").value;
 }
 function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
-  for (let i = 0; i < einheiten.length; i++) {
-    let id = einheiten[i].getId();
+  for (let einheit of einheiten) {
+    let id = einheit.getId();
     const option = document.querySelector("#dropdownZiel option[value=" + id + "]");
     option.hidden = !sichbarkeit;
     const option1 = document.querySelector("#dropdownStart option[value=" + id + "]");
@@ -236,7 +236,7 @@ erstellenDimensionUndEinheiten({
 });
 let C = einheiten.get("C");
 
-erstellenDimensionUndEinheiten({
+/* erstellenDimensionUndEinheiten({
   id: "frequenz",
   basisEinheit: {
     id: "f",
@@ -244,7 +244,7 @@ erstellenDimensionUndEinheiten({
   },
   unterEinheiten: {},
 });
-
+ */
 erstellenDimensionUndEinheiten({
   id: "geschwindigkeit",
   basisEinheit: {
@@ -253,7 +253,7 @@ erstellenDimensionUndEinheiten({
   },
   unterEinheiten: {},
 });
-
+/*
 erstellenDimensionUndEinheiten({
   id: "beschleunigung",
   basisEinheit: {
@@ -263,6 +263,7 @@ erstellenDimensionUndEinheiten({
   unterEinheiten: {},
 });
 
+*/
 erstellenDimensionUndEinheiten({
   id: "impuls",
   basisEinheit: {
@@ -272,6 +273,7 @@ erstellenDimensionUndEinheiten({
   unterEinheiten: {},
 });
 
+/*
 erstellenDimensionUndEinheiten({
   id: "kraft",
   basisEinheit: {
@@ -307,6 +309,7 @@ erstellenDimensionUndEinheiten({
   },
   unterEinheiten: {},
 });
+
 
 erstellenDimensionUndEinheiten({
   id: "energie",
@@ -345,7 +348,7 @@ erstellenDimensionUndEinheiten({
 //Fläche
 
 //Volumen
-
+*/
 erstellenDimensionUndEinheiten({
   id: "temperatur",
   basisEinheit: {
@@ -369,7 +372,7 @@ function dimensionVeraendert() {
 }
 
 function zuruecksetzenDroppdownOptionen() {
-  setDropdownOptionSichtbarkeit(einheiten, false);
+  setDropdownOptionSichtbarkeit(einheiten.values(), false);
   setDropdownOptionSichtbarkeit(natuerlicheEinheiten, true);
 }
 
