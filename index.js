@@ -1,3 +1,6 @@
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 function getZieleinheit() {
   return document.getElementById("dropdownZiel").value;
 }
@@ -103,9 +106,14 @@ class Faktor {
 }
 
 class BasisEinheit {
-  constructor(faktorIntraDimensional, id) {
+  constructor(faktorIntraDimensional, id,  label) {
     this.faktorIntraDimensional = faktorIntraDimensional;
     this.id = id;
+    if (label !== undefined) {
+      this.label = label;
+    } else {
+      this.label = this.id;
+    }
   }
   geteVWert(wert) {
     return wert.multiplizieren(this.faktorIntraDimensional);
@@ -119,10 +127,15 @@ class BasisEinheit {
 }
 
 class UnterEinheit {
-  constructor(basisEinheit, faktorInterDimensional, id) {
+  constructor(basisEinheit, faktorInterDimensional, id, label) {
     this.basisEinheit = basisEinheit;
     this.faktorInterDimensional = faktorInterDimensional;
     this.id = id;
+    if (label !== undefined) {
+      this.label = label;
+    } else {
+      this.label = this.id;
+    }
   }
   geteVWert(wert) {
     return this.basisEinheit.geteVWert(wert).multiplizieren(this.faktorInterDimensional);
@@ -136,8 +149,14 @@ class UnterEinheit {
 }
 
 class Dimension {
-  constructor(listeEinheiten) {
+  constructor(listeEinheiten, id, label) {
     this.listeEinheiten = listeEinheiten;
+    this.id = id;
+    if (label !== undefined) {
+      this.label = label;
+    } else {
+      this.label = capitalizeFirstLetter(this.id);
+    }
   }
 }
 
@@ -146,18 +165,17 @@ let dimensionen = new Map();
 
 function erstellenDimensionUndEinheiten(optionen) {
   let alleEinheitenDieserDimension = [];
-  let basisEinheit = new BasisEinheit(optionen.basisEinheit.faktor, optionen.basisEinheit.id);
+  let basisEinheit = new BasisEinheit(optionen.basisEinheit.faktor, optionen.basisEinheit.id, optionen.basisEinheit.label);
 
   alleEinheitenDieserDimension.push(basisEinheit);
   einheiten.set(optionen.basisEinheit.id, basisEinheit);
-  for (let unterEinheitId in optionen.unterEinheiten) {
-    let faktor = optionen.unterEinheiten[unterEinheitId];
-    let unterEinheit = new UnterEinheit(basisEinheit, faktor, unterEinheitId);
+  for (let unterEinheitOptionen of optionen.unterEinheiten) {
+    let unterEinheit = new UnterEinheit(basisEinheit, unterEinheitOptionen.faktor, unterEinheitOptionen.id, unterEinheitOptionen.label);
     alleEinheitenDieserDimension.push(unterEinheit);
-    einheiten.set(unterEinheitId, unterEinheit);
+    einheiten.set(unterEinheitOptionen.id, unterEinheit);
   }
 
-  let dimension = new Dimension(alleEinheitenDieserDimension);
+  let dimension = new Dimension(alleEinheitenDieserDimension, optionen.id, optionen.label);
   dimensionen.set(optionen.id, dimension);
 }
 
@@ -185,11 +203,12 @@ for (let natuerlicheEinheit of natuerlicheEinheiten) {
 
 erstellenDimensionUndEinheiten({
   id: "laenge",
+  label: "Länge",
   basisEinheit: {
     id: "m",
     faktor: new Faktor(1, [0, -1, -1, 1, 0]),
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 let m = einheiten.get("m");
 
@@ -199,16 +218,16 @@ erstellenDimensionUndEinheiten({
     id: "kg",
     faktor: new Faktor(1, [0, 2, 0, -1, 0]),
   },
-  unterEinheiten: {
-    g: faktorVonZehnerExponent(-3),
-    mg: faktorVonZehnerExponent(-6),
-    mug: faktorVonZehnerExponent(-9),
-    ng: faktorVonZehnerExponent(-12),
-    pg: faktorVonZehnerExponent(-15),
-    ag: faktorVonZehnerExponent(-18),
-    zg: faktorVonZehnerExponent(-21),
-    yg: faktorVonZehnerExponent(-24),
-  },
+  unterEinheiten: [
+    { id: "g", faktor: faktorVonZehnerExponent(-3) },
+    { id: "mg", faktor: faktorVonZehnerExponent(-6) },
+    { id: "mug", faktor: faktorVonZehnerExponent(-9), label: "µg"},
+    { id: "ng", faktor: faktorVonZehnerExponent(-12) },
+    { id: "pg", faktor: faktorVonZehnerExponent(-15) },
+    { id: "ag", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zg", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yg", faktor: faktorVonZehnerExponent(-24) },
+  ],
 });
 
 let kg = einheiten.get("kg");
@@ -219,10 +238,10 @@ erstellenDimensionUndEinheiten({
     id: "s",
     faktor: new Faktor(1, [0, 0, -1, 1, 0]),
   },
-  unterEinheiten: {
-    ps: faktorVonZehnerExponent(-12),
-    as: faktorVonZehnerExponent(-15),
-  },
+  unterEinheiten: [
+    { id: "ps", faktor: faktorVonZehnerExponent(-12) },
+    { id: "as", faktor: faktorVonZehnerExponent(-15) },
+  ],
 });
 
 let s = einheiten.get("s");
@@ -233,7 +252,7 @@ erstellenDimensionUndEinheiten({
     id: "C",
     faktor: new Faktor(1, [0, -0.5, -0.5, 0, -0.5]),
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 let C = einheiten.get("C");
 
@@ -243,7 +262,7 @@ let C = einheiten.get("C");
     id: "f",
     faktor: new Faktor(1, [0, 0, 0, 0, 0]).dividieren(s.faktorIntraDimensional),
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
  */
 erstellenDimensionUndEinheiten({
@@ -251,8 +270,9 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "mPros",
     faktor: m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional),
+    label: "m/s"
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 /*
 erstellenDimensionUndEinheiten({
@@ -261,7 +281,7 @@ erstellenDimensionUndEinheiten({
     id: "mPros2",
     faktor: m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional)),
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 */
@@ -269,9 +289,10 @@ erstellenDimensionUndEinheiten({
   id: "impuls",
   basisEinheit: {
     id: "kgMalmPros",
+    label: "kg ⋅ m/s",
     faktor: kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional),
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 /*
@@ -281,7 +302,7 @@ erstellenDimensionUndEinheiten({
     id: "N",
     faktor: kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional)),
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 erstellenDimensionUndEinheiten({
@@ -290,7 +311,7 @@ erstellenDimensionUndEinheiten({
     id: "V",
     faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 erstellenDimensionUndEinheiten({
@@ -299,7 +320,7 @@ erstellenDimensionUndEinheiten({
     id: "A",
     faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 erstellenDimensionUndEinheiten({
@@ -308,7 +329,7 @@ erstellenDimensionUndEinheiten({
     id: "W",
     faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch, evtl. V.faktorIntraDimensional.multiplizieren(A.faktorIntraDimensional)
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 
@@ -318,7 +339,7 @@ erstellenDimensionUndEinheiten({
     id: "J",
     faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 erstellenDimensionUndEinheiten({
@@ -327,7 +348,7 @@ erstellenDimensionUndEinheiten({
     id: "CProm3",
     faktor: C.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional))),
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 
 //Stromdichte
@@ -342,7 +363,7 @@ erstellenDimensionUndEinheiten({
     id: "Pa",
     faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
 //Dichte
 
@@ -356,8 +377,34 @@ erstellenDimensionUndEinheiten({
     id: "K",
     faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch, evt. kg.faktorIntraDimensional.multiplizieren(new Faktor(1, [0, 0, 0, -1, 0])) ?
   },
-  unterEinheiten: {},
+  unterEinheiten: [],
 });
+
+function erstelleOptionFuerEinheit(einheit) {
+  let element = document.createElement("option");
+  element.value = einheit.id;
+  element.text = einheit.label;
+  return element;
+}
+
+function erstelleOptionenFuerEinheiten() {
+  for (let einheit of einheiten.values()) {
+    let element1 = erstelleOptionFuerEinheit(einheit);
+    document.getElementById("dropdownZiel").appendChild(element1);
+
+    let element2 = erstelleOptionFuerEinheit(einheit);
+    document.getElementById("dropdownStart").appendChild(element2);
+  }
+}
+
+function erstelleOptionenFuerDimensionen() {
+  for (let dimension of dimensionen.values()) {
+    let element = document.createElement("option");
+    element.value = dimension.id;
+    element.text = dimension.label;
+    document.getElementById("dropdownDimension").appendChild(element);
+  }
+}
 
 function dimensionVeraendert() {
   document.getElementById("dropdownZiel").value = "";
@@ -368,7 +415,7 @@ function dimensionVeraendert() {
   if (dimension == "") {
     document.getElementById("dropdownZiel").disabled = true;
     document.getElementById("dropdownStart").disabled = true;
-  
+
     return;
   }
   let rechenDimension = dimension.toLowerCase().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
@@ -460,3 +507,8 @@ function berechneErgebnis() {
   let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
   return ergebnis;
 }
+
+window.addEventListener("load", function () {
+  erstelleOptionenFuerEinheiten();
+  erstelleOptionenFuerDimensionen();
+});

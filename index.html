@@ -20,64 +20,16 @@
         <p class = "endWertAusgabeWert" id="endWertAusgabeWert"> </p>
         <p class = "endWertAusgabeKonstanten" id="endWertAusgabeKonstanten"> </p>
     </div>
-    
-        <select class="dropdown1" id="dropdownZiel" disabled>
-            <option value=""> Zieleinheit </option>
-            <option value="kg"> kg </option>
-            <option value="g" > g </option>
-            <option value="mg" > mg </option>
-            <option value="mug" > µg </option>
-            <option value="ng" > ng </option>
-            <option value="pg"  > pg </option>
-            <option value="ag" > ag </option>
-            <option value="zg" > zg </option>
-            <option value="yg" > yg </option>
-            <option value="s" > s </option>
-            <option value="ps" > ps </option>
-            <option value="as" > as </option>
-            <option value="m" > m </option>
-            <option value="K" > K </option>
-            <option value="kgMalmPros" > kg ⋅ m/s </option>
-            <option value="mPros" > m/s </option>
-            <option value="C" > C </option>
-            <option value="eV" > eV </option>
-            <option value="keV" > keV </option>
-            <option value="MeV" > MeV </option>
-            <option value="GeV" > GeV </option>
-        </select>
+    <select class="dropdownDimension" id="dropdownDimension" onchange="dimensionVeraendert()">
+        <option value=""> Dimension </option>
+    </select>
         <select class="dropdown" id="dropdownStart" disabled>
             <option value=""> Ausgangseinheit </option>
-            <option value="kg"> kg </option>
-            <option value="g" > g </option>
-            <option value="mg" > mg </option>
-            <option value="mug" > µg </option>
-            <option value="ng" > ng </option>
-            <option value="pg"  > pg </option>
-            <option value="ag" > ag </option>
-            <option value="zg" > zg </option>
-            <option value="yg" > yg </option>
-            <option value="s" > s </option>
-            <option value="ps" > ps </option>
-            <option value="as" > as </option>
-            <option value="m" > m </option>
-            <option value="K" > K </option>
-            <option value="kgMalmPros" > kg ⋅ m/s </option>
-            <option value="mPros" > m/s </option>
-            <option value="C" > C </option>
-            <option value="eV" > eV </option>
-            <option value="keV" > keV </option>
-            <option value="MeV" > MeV </option>
-            <option value="GeV" > GeV </option>
         </select>
-        <select class="dropdownDimension" id="dropdownDimension" onchange="dimensionVeraendert()">
-            <option value=""> Dimension </option>
-            <option value="Masse"> Masse </option>
-            <option value="Zeit" > Zeit </option>
-            <option value="Länge" > Länge </option>
-            <option value="Energie" > Energie </option>
-            <option value="Kraft" > Kraft </option>
-            <option value="Geschwindigkeit"  > Geschwindigkeit </option>
+        <select class="dropdown1" id="dropdownZiel" disabled>
+            <option value=""> Zieleinheit </option>
         </select>
+        
     <script src="index.js"> </script>
 </body>
 
