@@ -123,7 +123,7 @@ class Einheit {
   }
 }
 
-class BasisEinheit extends Einheit{
+class BasisEinheit extends Einheit {
   constructor(faktorIntraDimensional, id, label) {
     super(id, label);
     this.faktorIntraDimensional = faktorIntraDimensional;
@@ -221,14 +221,28 @@ erstellenDimensionUndEinheiten({
     faktor: new Faktor(1, [0, 2, 0, -1, 0]),
   },
   unterEinheiten: [
+    { id: "Qg", faktor: faktorVonZehnerExponent(27) },
+    { id: "Rg", faktor: faktorVonZehnerExponent(24) },
+    { id: "Yg", faktor: faktorVonZehnerExponent(21) },
+    { id: "Zg", faktor: faktorVonZehnerExponent(18) },
+    { id: "Eg", faktor: faktorVonZehnerExponent(15) },
+    { id: "Pg", faktor: faktorVonZehnerExponent(12) },
+    { id: "Tg", faktor: faktorVonZehnerExponent(9) },
+    { id: "Gg", faktor: faktorVonZehnerExponent(6) },
+    { id: "Mg", faktor: faktorVonZehnerExponent(3) },
     { id: "g", faktor: faktorVonZehnerExponent(-3) },
+    { id: "dg", faktor: faktorVonZehnerExponent(-4) },
+    { id: "cg", faktor: faktorVonZehnerExponent(-5) },
     { id: "mg", faktor: faktorVonZehnerExponent(-6) },
     { id: "mug", faktor: faktorVonZehnerExponent(-9), label: "µg" },
     { id: "ng", faktor: faktorVonZehnerExponent(-12) },
     { id: "pg", faktor: faktorVonZehnerExponent(-15) },
-    { id: "ag", faktor: faktorVonZehnerExponent(-18) },
-    { id: "zg", faktor: faktorVonZehnerExponent(-21) },
-    { id: "yg", faktor: faktorVonZehnerExponent(-24) },
+    { id: "fg", faktor: faktorVonZehnerExponent(-18) },
+    { id: "ag", faktor: faktorVonZehnerExponent(-21) },
+    { id: "zg", faktor: faktorVonZehnerExponent(-24) },
+    { id: "yg", faktor: faktorVonZehnerExponent(-27) },
+    { id: "rg", faktor: faktorVonZehnerExponent(-30) },
+    { id: "qg", faktor: faktorVonZehnerExponent(-33) },
   ],
 });
 
@@ -258,15 +272,38 @@ erstellenDimensionUndEinheiten({
 });
 let C = einheiten.get("C");
 
-/* erstellenDimensionUndEinheiten({
+erstellenDimensionUndEinheiten({
   id: "frequenz",
   basisEinheit: {
-    id: "f",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]).dividieren(s.faktorIntraDimensional),
+    id: "Hz",
+    faktor: faktorVonVorFaktor(1).dividieren(s.faktorIntraDimensional),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "QHz", faktor: faktorVonZehnerExponent(30) },
+    { id: "RHz", faktor: faktorVonZehnerExponent(27) },
+    { id: "YHz", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZHz", faktor: faktorVonZehnerExponent(21) },
+    { id: "EHz", faktor: faktorVonZehnerExponent(18) },
+    { id: "PHz", faktor: faktorVonZehnerExponent(15) },
+    { id: "THz", faktor: faktorVonZehnerExponent(12) },
+    { id: "GHz", faktor: faktorVonZehnerExponent(9) },
+    { id: "MHz", faktor: faktorVonZehnerExponent(6) },
+    { id: "kHz", faktor: faktorVonZehnerExponent(3) },
+    { id: "dHz", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cHz", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mHz", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muHz", faktor: faktorVonZehnerExponent(-6), label: "µHz" },
+    { id: "nHz", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pHz", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fHz", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aHz", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zHz", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yHz", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rHz", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qHz", faktor: faktorVonZehnerExponent(-30) },
+  ],
 });
- */
+
 erstellenDimensionUndEinheiten({
   id: "geschwindigkeit",
   basisEinheit: {
