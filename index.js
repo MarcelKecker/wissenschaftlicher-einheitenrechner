@@ -20,7 +20,7 @@ function getAusgangsWert() {
 
 function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
   for (let einheit of einheiten) {
-    let id = einheit.getId();
+    let id = einheit.id;
     const option = document.querySelector("#dropdownZiel option[value=" + id + "]");
     option.hidden = !sichbarkeit;
     const option1 = document.querySelector("#dropdownStart option[value=" + id + "]");
@@ -112,15 +112,21 @@ class Faktor {
   }
 }
 
-class BasisEinheit {
-  constructor(faktorIntraDimensional, id, label) {
-    this.faktorIntraDimensional = faktorIntraDimensional;
+class Einheit {
+  constructor(id, label) {
     this.id = id;
     if (label !== undefined) {
       this.label = label;
     } else {
       this.label = this.id;
     }
+  }
+}
+
+class BasisEinheit extends Einheit{
+  constructor(faktorIntraDimensional, id, label) {
+    super(id, label);
+    this.faktorIntraDimensional = faktorIntraDimensional;
   }
   geteVWert(wert) {
     return wert.multiplizieren(this.faktorIntraDimensional);
@@ -128,30 +134,19 @@ class BasisEinheit {
   getWertVoneV(wert) {
     return wert.dividieren(this.faktorIntraDimensional);
   }
-  getId() {
-    return this.id;
-  }
 }
 
-class UnterEinheit {
+class UnterEinheit extends Einheit {
   constructor(basisEinheit, faktorInterDimensional, id, label) {
+    super(id, label);
     this.basisEinheit = basisEinheit;
     this.faktorInterDimensional = faktorInterDimensional;
-    this.id = id;
-    if (label !== undefined) {
-      this.label = label;
-    } else {
-      this.label = this.id;
-    }
   }
   geteVWert(wert) {
     return this.basisEinheit.geteVWert(wert).multiplizieren(this.faktorInterDimensional);
   }
   getWertVoneV(wert) {
     return this.basisEinheit.getWertVoneV(wert).dividieren(this.faktorInterDimensional);
-  }
-  getId() {
-    return this.id;
   }
 }
 
