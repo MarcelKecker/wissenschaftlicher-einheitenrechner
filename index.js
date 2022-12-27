@@ -1,15 +1,23 @@
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
 function getZieleinheit() {
   return document.getElementById("dropdownZiel").value;
 }
+
 function getAusgangseinheit() {
   return document.getElementById("dropdownStart").value;
 }
+
 function getDimension() {
   return document.getElementById("dropdownDimension").value;
 }
+
+function getAusgangsWert() {
+  return new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0]).bringeAufRichtigeZehnerPotenz();
+}
+
 function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
   for (let einheit of einheiten) {
     let id = einheit.getId();
@@ -19,6 +27,7 @@ function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
     option1.hidden = !sichbarkeit;
   }
 }
+
 function bringeAufRichtigeZehnerPotenz(vorFaktor, zehnerExponent) {
   let neuerVorFaktor = vorFaktor;
   let neuerZehnerExponent = zehnerExponent;
@@ -32,6 +41,7 @@ function bringeAufRichtigeZehnerPotenz(vorFaktor, zehnerExponent) {
   }
   return new Konstante(neuerVorFaktor, neuerZehnerExponent);
 }
+
 class Konstante {
   constructor(vorFaktor, zehnerExponent) {
     this.vorFaktor = vorFaktor;
@@ -51,9 +61,6 @@ class Konstante {
   }
 }
 
-var ausgangsEinheit;
-var ausgangsWert;
-var ergebnis;
 const c = new Konstante(2.99792458, 8);
 const hq = new Konstante(1.054571817, -34);
 const e = new Konstante(1.602176634, -19);
@@ -106,7 +113,7 @@ class Faktor {
 }
 
 class BasisEinheit {
-  constructor(faktorIntraDimensional, id,  label) {
+  constructor(faktorIntraDimensional, id, label) {
     this.faktorIntraDimensional = faktorIntraDimensional;
     this.id = id;
     if (label !== undefined) {
@@ -221,7 +228,7 @@ erstellenDimensionUndEinheiten({
   unterEinheiten: [
     { id: "g", faktor: faktorVonZehnerExponent(-3) },
     { id: "mg", faktor: faktorVonZehnerExponent(-6) },
-    { id: "mug", faktor: faktorVonZehnerExponent(-9), label: "µg"},
+    { id: "mug", faktor: faktorVonZehnerExponent(-9), label: "µg" },
     { id: "ng", faktor: faktorVonZehnerExponent(-12) },
     { id: "pg", faktor: faktorVonZehnerExponent(-15) },
     { id: "ag", faktor: faktorVonZehnerExponent(-18) },
@@ -270,7 +277,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "mPros",
     faktor: m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional),
-    label: "m/s"
+    label: "m/s",
   },
   unterEinheiten: [],
 });
@@ -434,11 +441,7 @@ function verarbeiteSubmitClick() {
   if (!getAusgangseinheit() || !getZieleinheit() || document.getElementById("ausgangsWert").value == "") {
     return;
   }
-  ausgangsWert = new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0]);
-  while (ausgangsWert.vorFaktor >= 10) {
-    ausgangsWert.vorFaktor = ausgangsWert.vorFaktor / 10;
-    ausgangsWert.listeExponenten[0] += 1;
-  }
+
   let ergebnis = berechneErgebnis();
   zeigeErgebnisAn(ergebnis);
 }
@@ -504,6 +507,7 @@ function toGerundetesErgebnisString(ergebnis) {
 function berechneErgebnis() {
   let ausgangsEinheit1 = einheiten.get(getAusgangseinheit());
   let zielEinheit1 = einheiten.get(getZieleinheit());
+  let ausgangsWert = getAusgangsWert();
   let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
   return ergebnis;
 }
