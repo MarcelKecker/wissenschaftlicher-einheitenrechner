@@ -168,7 +168,6 @@ let dimensionen = new Map();
 function erstellenDimensionUndEinheiten(optionen) {
   let alleEinheitenDieserDimension = [];
   let basisEinheit = new BasisEinheit(optionen.basisEinheit.faktor, optionen.basisEinheit.id, optionen.basisEinheit.label);
-
   alleEinheitenDieserDimension.push(basisEinheit);
   einheiten.set(optionen.basisEinheit.id, basisEinheit);
   for (let unterEinheitOptionen of optionen.unterEinheiten) {
@@ -189,8 +188,24 @@ function faktorVonVorFaktor(vorFaktor) {
   return new Faktor(vorFaktor, [0, 0, 0, 0, 0]);
 }
 
-// neue Einheit hinzufügen: -> index.html buttons hinzufügen
-//
+function getAbgeleitetenFaktor(basisEinheiten, pExponenten) {
+  let faktor = new Faktor(1, [0, 0, 0, 0, 0]);
+  if (basisEinheiten.length != pExponenten.length) {
+    throw new RuntimeException("mitgegebene Basiseinheiten und Exponenten müssen gleich lang sein")
+  }
+  for (let i = 0; i < basisEinheiten.length; i++) {
+    let exponent = pExponenten[i]
+    while (exponent < 0) {
+      faktor = faktor.dividieren(basisEinheiten[i].faktorIntraDimensional);
+      exponent++;
+    }
+    while (exponent > 0) {
+      faktor = faktor.multiplizieren(basisEinheiten[i].faktorIntraDimensional);
+      exponent--;
+    }
+  }
+  return faktor;
+}
 
 //Natürliche Einheiten
 let eV = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0]), "eV");
@@ -255,11 +270,24 @@ erstellenDimensionUndEinheiten({
     faktor: new Faktor(1, [0, 0, -1, 1, 0]),
   },
   unterEinheiten: [
+    { id: "a", faktor: faktorVonZehnerExponent(31557600) },
+    { id: "d", faktor: faktorVonZehnerExponent(86400) },
+    { id: "h", faktor: faktorVonZehnerExponent(3600) },
+    { id: "min", faktor: faktorVonVorFaktor(60) },
+    { id: "ds", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cs", faktor: faktorVonZehnerExponent(-2) },
+    { id: "ms", faktor: faktorVonZehnerExponent(-3) },
+    { id: "mus", faktor: faktorVonZehnerExponent(-6), label: "µs" },
+    { id: "ns", faktor: faktorVonZehnerExponent(-9) },
     { id: "ps", faktor: faktorVonZehnerExponent(-12) },
-    { id: "as", faktor: faktorVonZehnerExponent(-15) },
+    { id: "fs", faktor: faktorVonZehnerExponent(-15) },
+    { id: "as", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zs", faktor: faktorVonZehnerExponent(-21) },
+    { id: "ys", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rs", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qs", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
-
 let s = einheiten.get("s");
 
 erstellenDimensionUndEinheiten({
@@ -268,10 +296,65 @@ erstellenDimensionUndEinheiten({
     id: "C",
     faktor: new Faktor(1, [0, -0.5, -0.5, 0, -0.5]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "QC", faktor: faktorVonZehnerExponent(30) },
+    { id: "RC", faktor: faktorVonZehnerExponent(27) },
+    { id: "YC", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZC", faktor: faktorVonZehnerExponent(21) },
+    { id: "EC", faktor: faktorVonZehnerExponent(18) },
+    { id: "PC", faktor: faktorVonZehnerExponent(15) },
+    { id: "TC", faktor: faktorVonZehnerExponent(12) },
+    { id: "GC", faktor: faktorVonZehnerExponent(9) },
+    { id: "MC", faktor: faktorVonZehnerExponent(6) },
+    { id: "kC", faktor: faktorVonZehnerExponent(3) },
+    { id: "dC", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cC", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mC", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muC", faktor: faktorVonZehnerExponent(-6), label: "µC" },
+    { id: "nC", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pC", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fC", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aC", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zC", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yC", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rC", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qC", faktor: faktorVonZehnerExponent(-30) },
+  ],
 });
 let C = einheiten.get("C");
 
+erstellenDimensionUndEinheiten({
+  id: "spannung",
+  basisEinheit: {
+    id: "V",
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // so ist es richtig
+  },
+  unterEinheiten: [
+    { id: "QV", faktor: faktorVonZehnerExponent(30) },
+    { id: "RV", faktor: faktorVonZehnerExponent(27) },
+    { id: "YV", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZV", faktor: faktorVonZehnerExponent(21) },
+    { id: "EV", faktor: faktorVonZehnerExponent(18) },
+    { id: "PV", faktor: faktorVonZehnerExponent(15) },
+    { id: "TV", faktor: faktorVonZehnerExponent(12) },
+    { id: "GV", faktor: faktorVonZehnerExponent(9) },
+    { id: "MV", faktor: faktorVonZehnerExponent(6) },
+    { id: "kV", faktor: faktorVonZehnerExponent(3) },
+    { id: "dV", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cV", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mV", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muV", faktor: faktorVonZehnerExponent(-6), label: "µV" },
+    { id: "nV", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pV", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fV", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aV", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zV", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yV", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rV", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qV", faktor: faktorVonZehnerExponent(-30) },
+  ],
+});
+let V = einheiten.get("V");
 erstellenDimensionUndEinheiten({
   id: "frequenz",
   basisEinheit: {
@@ -303,90 +386,170 @@ erstellenDimensionUndEinheiten({
     { id: "qHz", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
-
 erstellenDimensionUndEinheiten({
   id: "geschwindigkeit",
   basisEinheit: {
     id: "mPros",
-    faktor: m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional),
+    faktor: getAbgeleitetenFaktor([m, s], [1, -1]),
     label: "m/s",
   },
   unterEinheiten: [],
 });
-/*
+
 erstellenDimensionUndEinheiten({
   id: "beschleunigung",
   basisEinheit: {
     id: "mPros2",
-    faktor: m.faktorIntraDimensional.dividieren(s.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional)),
+    faktor: getAbgeleitetenFaktor([m, s], [1, -2]),
   },
   unterEinheiten: [],
 });
 
-*/
 erstellenDimensionUndEinheiten({
   id: "impuls",
   basisEinheit: {
     id: "kgMalmPros",
     label: "kg ⋅ m/s",
-    faktor: kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional),
+    faktor: getAbgeleitetenFaktor([kg, m, s], [1, 1, -1]),
   },
   unterEinheiten: [],
 });
 
-/*
 erstellenDimensionUndEinheiten({
   id: "kraft",
   basisEinheit: {
     id: "N",
-    faktor: kg.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional).dividieren(s.faktorIntraDimensional.multiplizieren(s.faktorIntraDimensional)),
+    faktor: getAbgeleitetenFaktor([kg, m, s], [1, 1, -2]),
   },
-  unterEinheiten: [],
-});
-
-erstellenDimensionUndEinheiten({
-  id: "spannung",
-  basisEinheit: {
-    id: "V",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
-  },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "QN", faktor: faktorVonZehnerExponent(30) },
+    { id: "RN", faktor: faktorVonZehnerExponent(27) },
+    { id: "YN", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZN", faktor: faktorVonZehnerExponent(21) },
+    { id: "EN", faktor: faktorVonZehnerExponent(18) },
+    { id: "PN", faktor: faktorVonZehnerExponent(15) },
+    { id: "TN", faktor: faktorVonZehnerExponent(12) },
+    { id: "GN", faktor: faktorVonZehnerExponent(9) },
+    { id: "MN", faktor: faktorVonZehnerExponent(6) },
+    { id: "kN", faktor: faktorVonZehnerExponent(3) },
+    { id: "dN", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cN", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mN", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muN", faktor: faktorVonZehnerExponent(-6), label: "µN" },
+    { id: "nN", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pN", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fN", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aN", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zN", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yN", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rN", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qN", faktor: faktorVonZehnerExponent(-30) },
+  ],
 });
 
 erstellenDimensionUndEinheiten({
   id: "stromstaerke",
   basisEinheit: {
     id: "A",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+    faktor: getAbgeleitetenFaktor([C, s], [1, -1]),
   },
-  unterEinheiten: [],
-});
+  unterEinheiten: [
+    { id: "QA", faktor: faktorVonZehnerExponent(30) },
+    { id: "RA", faktor: faktorVonZehnerExponent(27) },
+    { id: "YA", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZA", faktor: faktorVonZehnerExponent(21) },
+    { id: "EA", faktor: faktorVonZehnerExponent(18) },
+    { id: "PA", faktor: faktorVonZehnerExponent(15) },
+    { id: "TA", faktor: faktorVonZehnerExponent(12) },
+    { id: "GA", faktor: faktorVonZehnerExponent(9) },
+    { id: "MA", faktor: faktorVonZehnerExponent(6) },
+    { id: "kA", faktor: faktorVonZehnerExponent(3) },
+    { id: "dA", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cA", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mA", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muA", faktor: faktorVonZehnerExponent(-6), label: "µA" },
+    { id: "nA", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pA", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fA", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aA", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zA", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yA", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rA", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qA", faktor: faktorVonZehnerExponent(-30) },
+  ],
+})
+let A = einheiten.get("A");
 
 erstellenDimensionUndEinheiten({
   id: "leistung",
   basisEinheit: {
     id: "W",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch, evtl. V.faktorIntraDimensional.multiplizieren(A.faktorIntraDimensional)
+    faktor: getAbgeleitetenFaktor([V, A], [1, 1]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "QW", faktor: faktorVonZehnerExponent(30) },
+    { id: "RW", faktor: faktorVonZehnerExponent(27) },
+    { id: "YW", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZW", faktor: faktorVonZehnerExponent(21) },
+    { id: "EW", faktor: faktorVonZehnerExponent(18) },
+    { id: "PW", faktor: faktorVonZehnerExponent(15) },
+    { id: "TW", faktor: faktorVonZehnerExponent(12) },
+    { id: "GW", faktor: faktorVonZehnerExponent(9) },
+    { id: "MW", faktor: faktorVonZehnerExponent(6) },
+    { id: "kW", faktor: faktorVonZehnerExponent(3) },
+    { id: "dW", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cW", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mW", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muW", faktor: faktorVonZehnerExponent(-6), label: "µW" },
+    { id: "nW", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pW", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fW", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aW", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zW", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yW", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rW", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qW", faktor: faktorVonZehnerExponent(-30) },
+  ],
 });
-
 
 erstellenDimensionUndEinheiten({
   id: "energie",
   basisEinheit: {
     id: "J",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+    faktor: getAbgeleitetenFaktor([kg, m, s], [1, 2, -2])
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "QJ", faktor: faktorVonZehnerExponent(30) },
+    { id: "RJ", faktor: faktorVonZehnerExponent(27) },
+    { id: "YJ", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZJ", faktor: faktorVonZehnerExponent(21) },
+    { id: "EJ", faktor: faktorVonZehnerExponent(18) },
+    { id: "PJ", faktor: faktorVonZehnerExponent(15) },
+    { id: "TJ", faktor: faktorVonZehnerExponent(12) },
+    { id: "GJ", faktor: faktorVonZehnerExponent(9) },
+    { id: "MJ", faktor: faktorVonZehnerExponent(6) },
+    { id: "kJ", faktor: faktorVonZehnerExponent(3) },
+    { id: "dJ", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cJ", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mJ", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muJ", faktor: faktorVonZehnerExponent(-6), label: "µJ" },
+    { id: "nJ", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pJ", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fJ", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aJ", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zJ", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yJ", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rJ", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qJ", faktor: faktorVonZehnerExponent(-30) },
+  ],
 });
 
 erstellenDimensionUndEinheiten({
   id: "ladungsdichte",
   basisEinheit: {
     id: "CProm3",
-    faktor: C.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional.multiplizieren(m.faktorIntraDimensional))),
-  },
+    faktor: getAbgeleitetenFaktor([C, m], [1, -3]),
+    },
   unterEinheiten: [],
 });
 
@@ -400,21 +563,43 @@ erstellenDimensionUndEinheiten({
   id: "druck",
   basisEinheit: {
     id: "Pa",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+    faktor: getAbgeleitetenFaktor([kg, m, s], [1, -1, -1]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "QPa", faktor: faktorVonZehnerExponent(30) },
+    { id: "RPa", faktor: faktorVonZehnerExponent(27) },
+    { id: "YPa", faktor: faktorVonZehnerExponent(24) },
+    { id: "ZPa", faktor: faktorVonZehnerExponent(21) },
+    { id: "EPa", faktor: faktorVonZehnerExponent(18) },
+    { id: "PPa", faktor: faktorVonZehnerExponent(15) },
+    { id: "TPa", faktor: faktorVonZehnerExponent(12) },
+    { id: "GPa", faktor: faktorVonZehnerExponent(9) },
+    { id: "MPa", faktor: faktorVonZehnerExponent(6) },
+    { id: "kPa", faktor: faktorVonZehnerExponent(3) },
+    { id: "dPa", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cPa", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mPa", faktor: faktorVonZehnerExponent(-3) },
+    { id: "muPa", faktor: faktorVonZehnerExponent(-6), label: "µPa" },
+    { id: "nPa", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pPa", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fPa", faktor: faktorVonZehnerExponent(-15) },
+    { id: "aPa", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zPa", faktor: faktorVonZehnerExponent(-21) },
+    { id: "yPa", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rPa", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qPa", faktor: faktorVonZehnerExponent(-30) },
+  ],
 });
 //Dichte
 
 //Fläche
 
 //Volumen
-*/
 erstellenDimensionUndEinheiten({
   id: "temperatur",
   basisEinheit: {
     id: "K",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch, evt. kg.faktorIntraDimensional.multiplizieren(new Faktor(1, [0, 0, 0, -1, 0])) ?
+    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
   },
   unterEinheiten: [],
 });
