@@ -15,7 +15,7 @@ function getDimension() {
 }
 
 function getAusgangsWert() {
-  return new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0]).bringeAufRichtigeZehnerPotenz();
+  return new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0, 0]).bringeAufRichtigeZehnerPotenz();
 }
 
 function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
@@ -65,6 +65,7 @@ const c = new Konstante(2.99792458, 8);
 const hq = new Konstante(1.054571817, -34);
 const e = new Konstante(1.602176634, -19);
 const elFeldkonstante = new Konstante(8.854187817, -12);
+const kb = new Konstante(1.380649, -23);
 
 class Faktor {
   constructor(vorFaktor, listeExponenten) {
@@ -77,7 +78,8 @@ class Faktor {
       .multiplizieren(c.hoch(this.listeExponenten[1]))
       .multiplizieren(hq.hoch(this.listeExponenten[2]))
       .multiplizieren(e.hoch(this.listeExponenten[3]))
-      .multiplizieren(elFeldkonstante.hoch(this.listeExponenten[4]));
+      .multiplizieren(elFeldkonstante.hoch(this.listeExponenten[4]))
+      .multiplizieren(kb.hoch(this.listeExponenten[5]));
   }
 
   multiplizieren(pFaktor) {
@@ -181,15 +183,15 @@ function erstellenDimensionUndEinheiten(optionen) {
 }
 
 function faktorVonZehnerExponent(zehnerExponent) {
-  return new Faktor(1, [zehnerExponent, 0, 0, 0, 0]);
+  return new Faktor(1, [zehnerExponent, 0, 0, 0, 0, 0]);
 }
 
 function faktorVonVorFaktor(vorFaktor) {
-  return new Faktor(vorFaktor, [0, 0, 0, 0, 0]);
+  return new Faktor(vorFaktor, [0, 0, 0, 0, 0, 0]);
 }
 
 function getAbgeleitetenFaktor(basisEinheiten, pExponenten) {
-  let faktor = new Faktor(1, [0, 0, 0, 0, 0]);
+  let faktor = new Faktor(1, [0, 0, 0, 0, 0, 0]);
   if (basisEinheiten.length != pExponenten.length) {
     throw new RuntimeException("mitgegebene Basiseinheiten und Exponenten müssen gleich lang sein")
   }
@@ -208,10 +210,10 @@ function getAbgeleitetenFaktor(basisEinheiten, pExponenten) {
 }
 
 //Natürliche Einheiten
-let eV = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0]), "eV");
-let keV = new UnterEinheit(eV, new Faktor(1, [3, 0, 0, 0, 0]), "keV");
-let MeV = new UnterEinheit(eV, new Faktor(1, [6, 0, 0, 0, 0]), "MeV");
-let GeV = new UnterEinheit(eV, new Faktor(1, [9, 0, 0, 0, 0]), "GeV");
+let eV = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0, 0]), "eV");
+let keV = new UnterEinheit(eV, new Faktor(1, [3, 0, 0, 0, 0, 0]), "keV");
+let MeV = new UnterEinheit(eV, new Faktor(1, [6, 0, 0, 0, 0, 0]), "MeV");
+let GeV = new UnterEinheit(eV, new Faktor(1, [9, 0, 0, 0, 0, 0]), "GeV");
 
 let natuerlicheEinheiten = [eV, keV, MeV, GeV];
 for (let natuerlicheEinheit of natuerlicheEinheiten) {
@@ -223,9 +225,32 @@ erstellenDimensionUndEinheiten({
   label: "Länge",
   basisEinheit: {
     id: "m",
-    faktor: new Faktor(1, [0, -1, -1, 1, 0]),
+    faktor: new Faktor(1, [0, -1, -1, 1, 0, 0]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "Qm", faktor: faktorVonZehnerExponent(30) },
+    { id: "Rm", faktor: faktorVonZehnerExponent(27) },
+    { id: "Ym", faktor: faktorVonZehnerExponent(24) },
+    { id: "Zm", faktor: faktorVonZehnerExponent(21) },
+    { id: "Em", faktor: faktorVonZehnerExponent(18) },
+    { id: "Pm", faktor: faktorVonZehnerExponent(15) },
+    { id: "Tm", faktor: faktorVonZehnerExponent(12) },
+    { id: "Gm", faktor: faktorVonZehnerExponent(9) },
+    { id: "Mm", faktor: faktorVonZehnerExponent(6) },
+    { id: "km", faktor: faktorVonZehnerExponent(3) },
+    { id: "dm", faktor: faktorVonZehnerExponent(-1) },
+    { id: "cm", faktor: faktorVonZehnerExponent(-2) },
+    { id: "mm", faktor: faktorVonZehnerExponent(-3) },
+    { id: "mum", faktor: faktorVonZehnerExponent(-6), label: "µm" },
+    { id: "nm", faktor: faktorVonZehnerExponent(-9) },
+    { id: "pm", faktor: faktorVonZehnerExponent(-12) },
+    { id: "fm", faktor: faktorVonZehnerExponent(-15) },
+    { id: "am", faktor: faktorVonZehnerExponent(-18) },
+    { id: "zm", faktor: faktorVonZehnerExponent(-21) },
+    { id: "ym", faktor: faktorVonZehnerExponent(-24) },
+    { id: "rm", faktor: faktorVonZehnerExponent(-27) },
+    { id: "qm", faktor: faktorVonZehnerExponent(-30) },
+  ],
 });
 let m = einheiten.get("m");
 
@@ -233,7 +258,7 @@ erstellenDimensionUndEinheiten({
   id: "masse",
   basisEinheit: {
     id: "kg",
-    faktor: new Faktor(1, [0, 2, 0, -1, 0]),
+    faktor: new Faktor(1, [0, 2, 0, -1, 0, 0]),
   },
   unterEinheiten: [
     { id: "Qg", faktor: faktorVonZehnerExponent(27) },
@@ -267,7 +292,7 @@ erstellenDimensionUndEinheiten({
   id: "zeit",
   basisEinheit: {
     id: "s",
-    faktor: new Faktor(1, [0, 0, -1, 1, 0]),
+    faktor: new Faktor(1, [0, 0, -1, 1, 0, 0]),
   },
   unterEinheiten: [
     { id: "a", faktor: faktorVonZehnerExponent(31557600) },
@@ -294,7 +319,7 @@ erstellenDimensionUndEinheiten({
   id: "ladung",
   basisEinheit: {
     id: "C",
-    faktor: new Faktor(1, [0, -0.5, -0.5, 0, -0.5]),
+    faktor: new Faktor(1, [0, -0.5, -0.5, 0, -0.5, 0]),
   },
   unterEinheiten: [
     { id: "QC", faktor: faktorVonZehnerExponent(30) },
@@ -327,7 +352,7 @@ erstellenDimensionUndEinheiten({
   id: "spannung",
   basisEinheit: {
     id: "V",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // so ist es richtig
+    faktor: new Faktor(1, [0, 0, 0, 0, 0, 0]),
   },
   unterEinheiten: [
     { id: "QV", faktor: faktorVonZehnerExponent(30) },
@@ -553,11 +578,34 @@ erstellenDimensionUndEinheiten({
   unterEinheiten: [],
 });
 
-//Stromdichte
+erstellenDimensionUndEinheiten({
+  id: "elektrische stromdichte",
+  label: "Elektrische Stromdichte",
+  basisEinheit: {
+    id: "AProm2",
+    faktor: getAbgeleitetenFaktor([A, m], [1, -2]),
+    },
+  unterEinheiten: [],
+});
 
-//Elektrische Feldstärke
+erstellenDimensionUndEinheiten({
+  id: "elektrische feldstaerke",
+  label: "Elektrische Feldstärke",
+  basisEinheit: {
+    id: "VProm",
+    faktor: getAbgeleitetenFaktor([V, m], [1, -1]),
+    },
+  unterEinheiten: [],
+});
 
-//Potenzial
+erstellenDimensionUndEinheiten({
+  id: "potential",
+  basisEinheit: {
+    id: "VProm",
+    faktor: getAbgeleitetenFaktor([V, m], [1, -1]), //TODO faktor
+    },
+  unterEinheiten: [],
+});
 
 erstellenDimensionUndEinheiten({
   id: "druck",
@@ -591,17 +639,77 @@ erstellenDimensionUndEinheiten({
   ],
 });
 //Dichte
+erstellenDimensionUndEinheiten({
+  id: "dichte",
+  basisEinheit: {
+    id: "kgProm3",
+    faktor: getAbgeleitetenFaktor([kg, m], [1, -3]),
+    },
+  unterEinheiten: [],
+});
 
 //Fläche
+erstellenDimensionUndEinheiten({
+  id: "flaeche",
+  label: "Fläche",
+  basisEinheit: {
+    id: "m2",
+    faktor: getAbgeleitetenFaktor([m], [2]),
+    },
+  unterEinheiten: [],
+});
 
 //Volumen
+erstellenDimensionUndEinheiten({
+  id: "volumen",
+  basisEinheit: {
+    id: "m3",
+    faktor: getAbgeleitetenFaktor([m], [3]),
+    },
+  unterEinheiten: [],
+});
+
 erstellenDimensionUndEinheiten({
   id: "temperatur",
   basisEinheit: {
     id: "K",
-    faktor: new Faktor(1, [0, 0, 0, 0, 0]), // TODO fehlt noch
+    faktor: new Faktor(1, [0, 0, 0, -1, 0, 1]),
   },
   unterEinheiten: [],
+});
+
+erstellenDimensionUndEinheiten({
+  id: "elektrischer widerstand",
+  label: "Elektrischer Widerstand",
+  basisEinheit: {
+    id: "omega",
+    label: "Ω",
+    faktor: getAbgeleitetenFaktor([V, A], [1, -1]),
+  },
+  unterEinheiten: [
+    { id: "Qohm", faktor: faktorVonZehnerExponent(30), label: "QΩ" },
+    { id: "Rohm", faktor: faktorVonZehnerExponent(27), label: "RΩ" },
+    { id: "Yohm", faktor: faktorVonZehnerExponent(24), label: "YΩ" },
+    { id: "Zohm", faktor: faktorVonZehnerExponent(21), label: "ZΩ" },
+    { id: "Eohm", faktor: faktorVonZehnerExponent(18), label: "EΩ" },
+    { id: "Pohm", faktor: faktorVonZehnerExponent(15), label: "PΩ" },
+    { id: "Tohm", faktor: faktorVonZehnerExponent(12), label: "TΩ" },
+    { id: "Gohm", faktor: faktorVonZehnerExponent(9), label: "GΩ" },
+    { id: "Mohm", faktor: faktorVonZehnerExponent(6), label: "MΩ" },
+    { id: "kohm", faktor: faktorVonZehnerExponent(3), label: "kΩ" },
+    { id: "dohm", faktor: faktorVonZehnerExponent(-1), label: "dΩ" },
+    { id: "cohm", faktor: faktorVonZehnerExponent(-2), label: "cΩ" },
+    { id: "mohm", faktor: faktorVonZehnerExponent(-3), label: "mΩ" },
+    { id: "muohm", faktor: faktorVonZehnerExponent(-6), label: "µΩ" },
+    { id: "nohm", faktor: faktorVonZehnerExponent(-9), label: "nΩ" },
+    { id: "pohm", faktor: faktorVonZehnerExponent(-12), label: "pΩ" },
+    { id: "fohm", faktor: faktorVonZehnerExponent(-15), label: "fΩ" },
+    { id: "aohm", faktor: faktorVonZehnerExponent(-18), label: "aΩ" },
+    { id: "zohm", faktor: faktorVonZehnerExponent(-21), label: "zΩ" },
+    { id: "yohm", faktor: faktorVonZehnerExponent(-24), label: "yΩ" },
+    { id: "rohm", faktor: faktorVonZehnerExponent(-27), label: "rΩ" },
+    { id: "qohm", faktor: faktorVonZehnerExponent(-30), label: "qΩ" },
+  ],
 });
 
 function erstelleOptionFuerEinheit(einheit) {
@@ -664,12 +772,8 @@ function verarbeiteSubmitClick() {
 }
 
 function zeigeErgebnisAn(ergebnis) {
-  //Wert gerundet
-
   let ausgabe = toGerundetesErgebnisString(ergebnis);
   document.getElementById("endWertAusgabeWert").textContent = ausgabe;
-  //Variablen
-
   let konstAusgabe = toKonstantenErgebnisString(ergebnis, ausgabe);
   document.getElementById("endWertAusgabeKonstanten").textContent = konstAusgabe;
 }
