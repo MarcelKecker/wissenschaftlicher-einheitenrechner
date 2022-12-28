@@ -45,7 +45,7 @@ function bringeAufRichtigeZehnerPotenz(vorFaktor, zehnerExponent) {
 class Konstante {
   constructor(vorFaktor, zehnerExponent) {
     this.vorFaktor = vorFaktor;
-    this.zehnerExponent = zehnerExponent;
+    this.zehnerExponent = zehnerExponent;    
   }
   hoch(exponent) {
     return new Konstante(Math.pow(this.vorFaktor, exponent), this.zehnerExponent * exponent);
@@ -411,6 +411,7 @@ erstellenDimensionUndEinheiten({
     { id: "qHz", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
+//TODO
 erstellenDimensionUndEinheiten({
   id: "geschwindigkeit",
   basisEinheit: {
@@ -420,7 +421,7 @@ erstellenDimensionUndEinheiten({
   },
   unterEinheiten: [],
 });
-
+//TODO
 erstellenDimensionUndEinheiten({
   id: "beschleunigung",
   basisEinheit: {
@@ -429,7 +430,7 @@ erstellenDimensionUndEinheiten({
   },
   unterEinheiten: [],
 });
-
+//TODO
 erstellenDimensionUndEinheiten({
   id: "impuls",
   basisEinheit: {
@@ -568,7 +569,7 @@ erstellenDimensionUndEinheiten({
     { id: "qJ", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
-
+//TODO
 erstellenDimensionUndEinheiten({
   id: "ladungsdichte",
   basisEinheit: {
@@ -577,7 +578,7 @@ erstellenDimensionUndEinheiten({
     },
   unterEinheiten: [],
 });
-
+//TODO
 erstellenDimensionUndEinheiten({
   id: "elektrische stromdichte",
   label: "Elektrische Stromdichte",
@@ -587,7 +588,7 @@ erstellenDimensionUndEinheiten({
     },
   unterEinheiten: [],
 });
-
+//TODO
 erstellenDimensionUndEinheiten({
   id: "elektrische feldstaerke",
   label: "Elektrische Feldstärke",
@@ -597,7 +598,7 @@ erstellenDimensionUndEinheiten({
     },
   unterEinheiten: [],
 });
-
+//TODO
 erstellenDimensionUndEinheiten({
   id: "potential",
   basisEinheit: {
@@ -638,7 +639,7 @@ erstellenDimensionUndEinheiten({
     { id: "qPa", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
-//Dichte
+//TODO
 erstellenDimensionUndEinheiten({
   id: "dichte",
   basisEinheit: {
@@ -648,7 +649,6 @@ erstellenDimensionUndEinheiten({
   unterEinheiten: [],
 });
 
-//Fläche
 erstellenDimensionUndEinheiten({
   id: "flaeche",
   label: "Fläche",
@@ -656,19 +656,64 @@ erstellenDimensionUndEinheiten({
     id: "m2",
     faktor: getAbgeleitetenFaktor([m], [2]),
     },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "Qm2", faktor: faktorVonZehnerExponent(30), label: "Qm²" },
+    { id: "Rm2", faktor: faktorVonZehnerExponent(27), label: "Rm²" },
+    { id: "Ym2", faktor: faktorVonZehnerExponent(24), label: "Ym²" },
+    { id: "Zm2", faktor: faktorVonZehnerExponent(21), label: "Zm²" },
+    { id: "Em2", faktor: faktorVonZehnerExponent(18), label: "Em²" },
+    { id: "Pm2", faktor: faktorVonZehnerExponent(15), label: "Pm²" },
+    { id: "Tm2", faktor: faktorVonZehnerExponent(12), label: "Tm²" },
+    { id: "Gm2", faktor: faktorVonZehnerExponent(9), label: "Gm²" },
+    { id: "Mm2", faktor: faktorVonZehnerExponent(6), label: "Mm²" },
+    { id: "km2", faktor: faktorVonZehnerExponent(3), label: "km²" },
+    { id: "dm2", faktor: faktorVonZehnerExponent(-1), label: "dm²" },
+    { id: "cm2", faktor: faktorVonZehnerExponent(-2), label: "cm²" },
+    { id: "mm2", faktor: faktorVonZehnerExponent(-3), label: "mm²" },
+    { id: "mum2", faktor: faktorVonZehnerExponent(-6), label: "µm²" },
+    { id: "nm2", faktor: faktorVonZehnerExponent(-9), label: "nm²" },
+    { id: "pm2", faktor: faktorVonZehnerExponent(-12), label: "pm²" },
+    { id: "fm2", faktor: faktorVonZehnerExponent(-15), label: "fm²" },
+    { id: "am2", faktor: faktorVonZehnerExponent(-18), label: "am²" },
+    { id: "zm2", faktor: faktorVonZehnerExponent(-21), label: "zm²" },
+    { id: "ym2", faktor: faktorVonZehnerExponent(-24), label: "ym²" },
+    { id: "rm2", faktor: faktorVonZehnerExponent(-27), label: "rm²" },
+    { id: "qm2", faktor: faktorVonZehnerExponent(-30), label: "qm²" },
+  ],
 });
 
-//Volumen
 erstellenDimensionUndEinheiten({
   id: "volumen",
   basisEinheit: {
     id: "m3",
     faktor: getAbgeleitetenFaktor([m], [3]),
     },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "Qm3", faktor: faktorVonZehnerExponent(30), label: "Qm³" },
+    { id: "Rm3", faktor: faktorVonZehnerExponent(27), label: "Rm³" },
+    { id: "Ym3", faktor: faktorVonZehnerExponent(24), label: "Ym³" },
+    { id: "Zm3", faktor: faktorVonZehnerExponent(21), label: "Zm³" },
+    { id: "Em3", faktor: faktorVonZehnerExponent(18), label: "Em³" },
+    { id: "Pm3", faktor: faktorVonZehnerExponent(15), label: "Pm³" },
+    { id: "Tm3", faktor: faktorVonZehnerExponent(12), label: "Tm³" },
+    { id: "Gm3", faktor: faktorVonZehnerExponent(9), label: "Gm³" },
+    { id: "Mm3", faktor: faktorVonZehnerExponent(6), label: "Mm³" },
+    { id: "km3", faktor: faktorVonZehnerExponent(3), label: "km³" },
+    { id: "dm3", faktor: faktorVonZehnerExponent(-1), label: "dm³" },
+    { id: "cm3", faktor: faktorVonZehnerExponent(-2), label: "cm³" },
+    { id: "mm3", faktor: faktorVonZehnerExponent(-3), label: "mm³" },
+    { id: "mum3", faktor: faktorVonZehnerExponent(-6), label: "µm³" },
+    { id: "nm3", faktor: faktorVonZehnerExponent(-9), label: "nm³" },
+    { id: "pm3", faktor: faktorVonZehnerExponent(-12), label: "pm³" },
+    { id: "fm3", faktor: faktorVonZehnerExponent(-15), label: "fm³" },
+    { id: "am3", faktor: faktorVonZehnerExponent(-18), label: "am³" },
+    { id: "zm3", faktor: faktorVonZehnerExponent(-21), label: "zm³" },
+    { id: "ym3", faktor: faktorVonZehnerExponent(-24), label: "ym³" },
+    { id: "rm3", faktor: faktorVonZehnerExponent(-27), label: "rm³" },
+    { id: "qm3", faktor: faktorVonZehnerExponent(-30), label: "qm³" },
+  ],
 });
-
+//TODO
 erstellenDimensionUndEinheiten({
   id: "temperatur",
   basisEinheit: {
