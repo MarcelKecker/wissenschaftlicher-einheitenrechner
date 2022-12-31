@@ -819,11 +819,16 @@ function verarbeiteSubmitClick() {
 function zeigeErgebnisAn(ergebnis) {
   let ausgabe = toGerundetesErgebnisString(ergebnis);
   document.getElementById("endWertAusgabeWert").textContent = ausgabe;
-  let konstAusgabe = toKonstantenErgebnisString(ergebnis, ausgabe);
+  let konstAusgabe = toKonstantenErgebnisString(ergebnis);
+  if (konstAusgabe == ausgabe) {
+    konstAusgabe = "";
+  }
+  document.getElementById("endWertAusgabeKonstanten").hidden = konstAusgabe === "";
+  console.log(document.getElementById("endWertAusgabeKonstanten").hidden)
   document.getElementById("endWertAusgabeKonstanten").textContent = konstAusgabe;
 }
 
-function toKonstantenErgebnisString(ergebnis, ausgabe) {
+function toKonstantenErgebnisString(ergebnis) {
   ergebnis = ergebnis.bringeAufRichtigeZehnerPotenz();
   let konstAusgabe = "";
   if (ergebnis.listeExponenten[0] <= 3 && ergebnis.listeExponenten[0] >= 1) {
@@ -843,9 +848,6 @@ function toKonstantenErgebnisString(ergebnis, ausgabe) {
     konstAusgabe = konstAusgabe.replace(" * ", "");
   } else {
     konstAusgabe = ergebnis.vorFaktor + "" + konstAusgabe;
-  }
-  if (konstAusgabe == ausgabe) {
-    return "";
   }
   return konstAusgabe;
 }
