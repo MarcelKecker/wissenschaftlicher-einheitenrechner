@@ -15,7 +15,7 @@ function getDimension() {
 }
 
 function getAusgangsWert() {
-  return new Faktor(document.getElementById("ausgangsWert").value, [0, 0, 0, 0, 0, 0]).bringeAufRichtigeZehnerPotenz();
+  return new Konstante(document.getElementById("ausgangsWert").value, 0).bringeAufRichtigeZehnerPotenz();
 }
 
 function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
@@ -45,7 +45,7 @@ function bringeAufRichtigeZehnerPotenz(vorFaktor, zehnerExponent) {
 class Konstante {
   constructor(vorFaktor, zehnerExponent) {
     this.vorFaktor = vorFaktor;
-    this.zehnerExponent = zehnerExponent;    
+    this.zehnerExponent = zehnerExponent;
   }
   hoch(exponent) {
     return new Konstante(Math.pow(this.vorFaktor, exponent), this.zehnerExponent * exponent);
@@ -55,6 +55,9 @@ class Konstante {
   }
   alsZahl() {
     return this.vorFaktor * Math.pow(10, this.zehnerExponent);
+  }
+  alsFaktor() {
+    return new Faktor(this.vorFaktor, [this.zehnerExponent, 0, 0, 0, 0, 0]);
   }
   bringeAufRichtigeZehnerPotenz() {
     return bringeAufRichtigeZehnerPotenz(this.vorFaktor, this.zehnerExponent);
@@ -97,7 +100,7 @@ class Faktor {
   dividieren(pFaktor) {
     let neuerVorFaktor = this.vorFaktor / pFaktor.vorFaktor;
     let neueListeExponenten = new Array();
-    if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
+        if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
       return;
     }
     for (let i = 0; i < this.listeExponenten.length; i++) {
@@ -111,6 +114,30 @@ class Faktor {
     let neueListeExponenten = [...this.listeExponenten];
     neueListeExponenten[0] = konstante.zehnerExponent;
     return new Faktor(konstante.vorFaktor, neueListeExponenten);
+  }
+}
+
+class Ergebnis {
+  constructor(faktor, summand) {
+    this.faktor = faktor;
+    this.summand = summand;
+    if (
+      this.faktor.listeExponenten[0] === 0 &&
+      this.faktor.listeExponenten[1] === 0 &&
+      this.faktor.listeExponenten[2] === 0 &&
+      this.faktor.listeExponenten[3] === 0 &&
+      this.faktor.listeExponenten[4] === 0 &&
+      this.faktor.listeExponenten[5] === 0
+    ) {
+      this.faktor = new Faktor(faktor.vorFaktor + summand, faktor.listeExponenten);
+      this.summand = 0;
+    }
+  }
+  bringeAufRichtigeZehnerPotenz() {
+    return new Ergebnis(this.faktor.bringeAufRichtigeZehnerPotenz(), this.summand);
+  }
+  alsWert() {
+    return new Konstante (this.faktor.alsWert().alsZahl() + this.summand, 0);
   }
 }
 
@@ -131,10 +158,14 @@ class BasisEinheit extends Einheit {
     this.faktorIntraDimensional = faktorIntraDimensional;
   }
   geteVWert(wert) {
-    return wert.multiplizieren(this.faktorIntraDimensional);
+    let faktor = wert.alsFaktor();
+    return faktor.multiplizieren(this.faktorIntraDimensional);
   }
   getWertVoneV(wert) {
     return wert.dividieren(this.faktorIntraDimensional);
+  }
+  getErgebnisVoneV(wert) {
+    return new Ergebnis(this.getWertVoneV(wert), 0);
   }
 }
 
@@ -147,8 +178,24 @@ class UnterEinheit extends Einheit {
   geteVWert(wert) {
     return this.basisEinheit.geteVWert(wert).multiplizieren(this.faktorInterDimensional);
   }
-  getWertVoneV(wert) {
-    return this.basisEinheit.getWertVoneV(wert).dividieren(this.faktorInterDimensional);
+  getErgebnisVoneV(wert) {
+    return new Ergebnis(this.basisEinheit.getWertVoneV(wert).dividieren(this.faktorInterDimensional), 0);
+  }
+}
+class SpecialUnterEinheit extends Einheit {
+  constructor(basisEinheit, faktor, summand, id, label) {
+    super(id, label);
+    this.basisEinheit = basisEinheit;
+    this.faktor = faktor;
+    this.summand = summand;
+  }
+  geteVWert(wert) {
+    let wertInBasisEinheit = wert.alsZahl() * this.faktor + this.summand;
+    let konstanteInBasisEinheit = new Konstante(wertInBasisEinheit, 0).bringeAufRichtigeZehnerPotenz();
+    return this.basisEinheit.geteVWert(konstanteInBasisEinheit);
+  }
+  getErgebnisVoneV(wert) {
+    return new Ergebnis(this.basisEinheit.getWertVoneV(wert).dividieren(faktorVonVorFaktor(this.faktor)), -this.summand);
   }
 }
 
@@ -193,10 +240,10 @@ function faktorVonVorFaktor(vorFaktor) {
 function getAbgeleitetenFaktor(basisEinheiten, pExponenten) {
   let faktor = new Faktor(1, [0, 0, 0, 0, 0, 0]);
   if (basisEinheiten.length != pExponenten.length) {
-    throw new RuntimeException("mitgegebene Basiseinheiten und Exponenten müssen gleich lang sein")
+    throw new RuntimeException("mitgegebene Basiseinheiten und Exponenten müssen gleich lang sein");
   }
   for (let i = 0; i < basisEinheiten.length; i++) {
-    let exponent = pExponenten[i]
+    let exponent = pExponenten[i];
     while (exponent < 0) {
       faktor = faktor.dividieren(basisEinheiten[i].faktorIntraDimensional);
       exponent++;
@@ -503,7 +550,7 @@ erstellenDimensionUndEinheiten({
     { id: "rA", faktor: faktorVonZehnerExponent(-27) },
     { id: "qA", faktor: faktorVonZehnerExponent(-30) },
   ],
-})
+});
 let A = einheiten.get("A");
 
 erstellenDimensionUndEinheiten({
@@ -542,7 +589,7 @@ erstellenDimensionUndEinheiten({
   id: "energie",
   basisEinheit: {
     id: "J",
-    faktor: getAbgeleitetenFaktor([kg, m, s], [1, 2, -2])
+    faktor: getAbgeleitetenFaktor([kg, m, s], [1, 2, -2]),
   },
   unterEinheiten: [
     { id: "QJ", faktor: faktorVonZehnerExponent(30) },
@@ -575,7 +622,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "CProm3",
     faktor: getAbgeleitetenFaktor([C, m], [1, -3]),
-    },
+  },
   unterEinheiten: [],
 });
 //TODO
@@ -585,7 +632,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "AProm2",
     faktor: getAbgeleitetenFaktor([A, m], [1, -2]),
-    },
+  },
   unterEinheiten: [],
 });
 //TODO
@@ -595,7 +642,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "VProm",
     faktor: getAbgeleitetenFaktor([V, m], [1, -1]),
-    },
+  },
   unterEinheiten: [],
 });
 //TODO
@@ -604,7 +651,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "VProm",
     faktor: getAbgeleitetenFaktor([V, m], [1, -1]), //TODO faktor
-    },
+  },
   unterEinheiten: [],
 });
 
@@ -645,7 +692,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "kgProm3",
     faktor: getAbgeleitetenFaktor([kg, m], [1, -3]),
-    },
+  },
   unterEinheiten: [],
 });
 
@@ -655,7 +702,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "m2",
     faktor: getAbgeleitetenFaktor([m], [2]),
-    },
+  },
   unterEinheiten: [
     { id: "Qm2", faktor: faktorVonZehnerExponent(30), label: "Qm²" },
     { id: "Rm2", faktor: faktorVonZehnerExponent(27), label: "Rm²" },
@@ -687,7 +734,7 @@ erstellenDimensionUndEinheiten({
   basisEinheit: {
     id: "m3",
     faktor: getAbgeleitetenFaktor([m], [3]),
-    },
+  },
   unterEinheiten: [
     { id: "Qm3", faktor: faktorVonZehnerExponent(30), label: "Qm³" },
     { id: "Rm3", faktor: faktorVonZehnerExponent(27), label: "Rm³" },
@@ -714,14 +761,23 @@ erstellenDimensionUndEinheiten({
   ],
 });
 //TODO
-erstellenDimensionUndEinheiten({
+/*erstellenDimensionUndEinheiten({
   id: "temperatur",
   basisEinheit: {
     id: "K",
     faktor: new Faktor(1, [0, 0, 0, -1, 0, 1]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+
+  ],
 });
+*/
+let K = new BasisEinheit(new Faktor(1, [0, 0, 0, -1, 0, 1]), "K")
+einheiten.set(K.id, K);
+let gradC = new SpecialUnterEinheit(K, 1, 273.15, "gradC", "°C")
+einheiten.set( gradC.id, gradC);
+let temperatur = new Dimension([K, gradC], "temperatur");
+dimensionen.set(temperatur.id, temperatur);
 
 erstellenDimensionUndEinheiten({
   id: "elektrischer widerstand",
@@ -792,7 +848,6 @@ function dimensionVeraendert() {
   if (dimension == "") {
     document.getElementById("dropdownZiel").disabled = true;
     document.getElementById("dropdownStart").disabled = true;
-
     return;
   }
   let rechenDimension = dimension.toLowerCase().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
@@ -824,35 +879,46 @@ function zeigeErgebnisAn(ergebnis) {
     konstAusgabe = "";
   }
   document.getElementById("endWertAusgabeKonstanten").hidden = konstAusgabe === "";
-  console.log(document.getElementById("endWertAusgabeKonstanten").hidden)
   document.getElementById("endWertAusgabeKonstanten").textContent = konstAusgabe;
 }
 
 function toKonstantenErgebnisString(ergebnis) {
   ergebnis = ergebnis.bringeAufRichtigeZehnerPotenz();
+  let faktor = ergebnis.faktor;
+  let summand = ergebnis.summand;
   let konstAusgabe = "";
-  if (ergebnis.listeExponenten[0] <= 3 && ergebnis.listeExponenten[0] >= 1) {
-    ergebnis.vorFaktor = ergebnis.vorFaktor * Math.pow(10, ergebnis.listeExponenten[0]);
-  } else if (ergebnis.listeExponenten[0] !== 0) {
-    konstAusgabe += " * 10^" + ergebnis.listeExponenten[0];
+  if (faktor.listeExponenten[0] <= 3 && faktor.listeExponenten[0] >= 1) {
+    faktor.vorFaktor = faktor.vorFaktor * Math.pow(10, faktor.listeExponenten[0]);
+  } else if (faktor.listeExponenten[0] !== 0) {
+    konstAusgabe += " * 10^" + faktor.listeExponenten[0];
   }
   const konstanten = ["c", "ℏ", "e", "ε₀"];
   for (let i = 0; i < konstanten.length; i++) {
-    if (ergebnis.listeExponenten[i + 1] == 1) {
+    if (faktor.listeExponenten[i + 1] == 1) {
       konstAusgabe += " * " + konstanten[i];
-    } else if (ergebnis.listeExponenten[i + 1] !== 0) {
-      konstAusgabe += " * " + konstanten[i] + "^" + ergebnis.listeExponenten[i + 1];
+    } else if (faktor.listeExponenten[i + 1] !== 0) {
+      konstAusgabe += " * " + konstanten[i] + "^" + faktor.listeExponenten[i + 1];
     }
   }
-  if (ergebnis.vorFaktor == 1) {
+  if (faktor.vorFaktor == 1) {
     konstAusgabe = konstAusgabe.replace(" * ", "");
   } else {
-    konstAusgabe = ergebnis.vorFaktor + "" + konstAusgabe;
+    konstAusgabe = faktor.vorFaktor + "" + konstAusgabe;
   }
-  return konstAusgabe;
+  if (summand === 0) {
+    return konstAusgabe;
+  }
+  if (konstAusgabe == 0) {
+    return summand;
+  }
+  if (summand < 0) {
+    return konstAusgabe + " - " + -summand;
+  }
+  return konstAusgabe + " + " + summand;
 }
 
 function toGerundetesErgebnisString(ergebnis) {
+  console.log(ergebnis)
   let gerundetesErgebnis = ergebnis.alsWert().bringeAufRichtigeZehnerPotenz();
   if (gerundetesErgebnis.vorFaktor == 1 && gerundetesErgebnis.zehnerExponent == 0) {
     return "1";
@@ -876,7 +942,8 @@ function berechneErgebnis() {
   let ausgangsEinheit1 = einheiten.get(getAusgangseinheit());
   let zielEinheit1 = einheiten.get(getZieleinheit());
   let ausgangsWert = getAusgangsWert();
-  let ergebnis = zielEinheit1.getWertVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
+  //programm kann alles machen (mg -> nm), ist aber nicht sinnvoll
+  let ergebnis = zielEinheit1.getErgebnisVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
   return ergebnis;
 }
 
