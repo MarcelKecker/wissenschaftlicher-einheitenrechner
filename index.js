@@ -853,6 +853,9 @@ function erstelleOptionenFuerDimensionen() {
 function dimensionVeraendert() {
   document.getElementById("dropdownZiel").value = "";
   document.getElementById("dropdownStart").value = "";
+  document.getElementById("ausgangsWert").value = "";
+  document.getElementById("endWertAusgabeWert").textContent = "";
+  document.getElementById("endWertAusgabeKonstanten").hidden = true;
 
   zuruecksetzenDroppdownOptionen();
   let dimension = getDimension();
