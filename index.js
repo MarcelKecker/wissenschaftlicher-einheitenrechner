@@ -18,6 +18,10 @@ function getAusgangsWert() {
   return new Konstante(document.getElementById("ausgangsWert").value, 0).bringeAufRichtigeZehnerPotenz();
 }
 
+function runden(zahl, anzahlStellen) {
+    return parseFloat((Math.round(zahl * Math.pow(10, anzahlStellen)) / Math.pow(10, anzahlStellen)).toFixed(anzahlStellen));
+}
+
 function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
   for (let einheit of einheiten) {
     let id = einheit.id;
@@ -129,11 +133,13 @@ class Ergebnis {
       this.faktor.listeExponenten[4] === 0 &&
       this.faktor.listeExponenten[5] === 0
     ) {
-      this.faktor = new Faktor(faktor.vorFaktor + summand, faktor.listeExponenten);
+      this.faktor = new Faktor(this.faktor.vorFaktor + summand, faktor.listeExponenten);
       this.summand = 0;
     }
   }
   bringeAufRichtigeZehnerPotenz() {
+    //console.log(this.faktor)
+    //console.log(this.faktor.bringeAufRichtigeZehnerPotenz())
     return new Ergebnis(this.faktor.bringeAufRichtigeZehnerPotenz(), this.summand);
   }
   alsWert() {
@@ -183,19 +189,27 @@ class UnterEinheit extends Einheit {
   }
 }
 class SpecialUnterEinheit extends Einheit {
-  constructor(basisEinheit, faktor, summand, id, label) {
+  constructor(basisEinheit, faktor, id, label, summandAufUnterEinheit, summandAufBasisEinheit) {
     super(id, label);
     this.basisEinheit = basisEinheit;
     this.faktor = faktor;
-    this.summand = summand;
+    this.summandAufUnterEinheit = summandAufUnterEinheit;
+    if (summandAufBasisEinheit === undefined) {
+      console.log(summandAufUnterEinheit)
+      this.summandAufBasisEinheit = summandAufUnterEinheit
+    } else {
+      this.summandAufBasisEinheit = summandAufBasisEinheit;
+    }
+    console.log(this.summandAufBasisEinheit)
   }
   geteVWert(wert) {
-    let wertInBasisEinheit = wert.alsZahl() * this.faktor + this.summand;
+    let wertInBasisEinheit = wert.alsZahl() * this.faktor + this.summandAufBasisEinheit;
     let konstanteInBasisEinheit = new Konstante(wertInBasisEinheit, 0).bringeAufRichtigeZehnerPotenz();
     return this.basisEinheit.geteVWert(konstanteInBasisEinheit);
   }
   getErgebnisVoneV(wert) {
-    return new Ergebnis(this.basisEinheit.getWertVoneV(wert).dividieren(faktorVonVorFaktor(this.faktor)), -this.summand);
+    //console.log("hallooo", wert, this.basisEinheit.getWertVoneV(wert), this.basisEinheit.getWertVoneV(wert).dividieren(faktorVonVorFaktor(this.faktor)), new Ergebnis(this.basisEinheit.getWertVoneV(wert).dividieren(faktorVonVorFaktor(this.faktor)), -this.summandAufBasisEinheit))
+    return new Ergebnis(this.basisEinheit.getWertVoneV(wert).dividieren(faktorVonVorFaktor(this.faktor)), -this.summandAufUnterEinheit);
   }
 }
 
@@ -774,9 +788,11 @@ erstellenDimensionUndEinheiten({
 */
 let K = new BasisEinheit(new Faktor(1, [0, 0, 0, -1, 0, 1]), "K")
 einheiten.set(K.id, K);
-let gradC = new SpecialUnterEinheit(K, 1, 273.15, "gradC", "°C")
+let gradC = new SpecialUnterEinheit(K, 1, "gradC", "°C", 273.15)
 einheiten.set( gradC.id, gradC);
-let temperatur = new Dimension([K, gradC], "temperatur");
+let gradF = new SpecialUnterEinheit(K, 0.5555555555, "gradF", "°F", 459.67, 255,372)
+einheiten.set( gradF.id, gradF);
+let temperatur = new Dimension([K, gradC, gradF], "temperatur");
 dimensionen.set(temperatur.id, temperatur);
 
 erstellenDimensionUndEinheiten({
@@ -883,6 +899,7 @@ function zeigeErgebnisAn(ergebnis) {
 }
 
 function toKonstantenErgebnisString(ergebnis) {
+  //console.log(ergebnis)
   ergebnis = ergebnis.bringeAufRichtigeZehnerPotenz();
   let faktor = ergebnis.faktor;
   let summand = ergebnis.summand;
@@ -918,24 +935,24 @@ function toKonstantenErgebnisString(ergebnis) {
 }
 
 function toGerundetesErgebnisString(ergebnis) {
-  console.log(ergebnis)
   let gerundetesErgebnis = ergebnis.alsWert().bringeAufRichtigeZehnerPotenz();
-  if (gerundetesErgebnis.vorFaktor == 1 && gerundetesErgebnis.zehnerExponent == 0) {
+  let vorFaktor = runden(gerundetesErgebnis.vorFaktor, 6)
+  if (vorFaktor == 1 && gerundetesErgebnis.zehnerExponent == 0) {
     return "1";
   }
   if (gerundetesErgebnis.zehnerExponent == 0) {
-    return gerundetesErgebnis.vorFaktor;
+    return vorFaktor;
   }
   if (gerundetesErgebnis.zehnerExponent <= 3 && gerundetesErgebnis.zehnerExponent >= 1) {
-    return gerundetesErgebnis.vorFaktor * Math.pow(10, gerundetesErgebnis.zehnerExponent);
+    return runden(vorFaktor * Math.pow(10, gerundetesErgebnis.zehnerExponent), 6);
   }
-  if (gerundetesErgebnis.vorFaktor == 1) {
+  if (vorFaktor == 1) {
     return "10^" + gerundetesErgebnis.zehnerExponent;
   }
-  if (gerundetesErgebnis.vorFaktor == 0) {
+  if (vorFaktor == 0) {
     return 0;
   }
-  return gerundetesErgebnis.vorFaktor + " * 10^" + gerundetesErgebnis.zehnerExponent;
+  return vorFaktor + " * 10^" + gerundetesErgebnis.zehnerExponent;
 }
 
 function berechneErgebnis() {
@@ -943,7 +960,10 @@ function berechneErgebnis() {
   let zielEinheit1 = einheiten.get(getZieleinheit());
   let ausgangsWert = getAusgangsWert();
   //programm kann alles machen (mg -> nm), ist aber nicht sinnvoll
+  //console.log("ab hier")
+  //console.log(ausgangsWert, ausgangsEinheit1.geteVWert(ausgangsWert), zielEinheit1.getErgebnisVoneV(ausgangsEinheit1.geteVWert(ausgangsWert)))
   let ergebnis = zielEinheit1.getErgebnisVoneV(ausgangsEinheit1.geteVWert(ausgangsWert));
+  //console.log("bis hier")
   return ergebnis;
 }
 
