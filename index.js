@@ -19,7 +19,7 @@ function getAusgangsWert() {
 }
 
 function runden(zahl, anzahlStellen) {
-    return parseFloat((Math.round(zahl * Math.pow(10, anzahlStellen)) / Math.pow(10, anzahlStellen)).toFixed(anzahlStellen));
+  return parseFloat((Math.round(zahl * Math.pow(10, anzahlStellen)) / Math.pow(10, anzahlStellen)).toFixed(anzahlStellen));
 }
 
 function setDropdownOptionSichtbarkeit(einheiten, sichbarkeit) {
@@ -104,7 +104,7 @@ class Faktor {
   dividieren(pFaktor) {
     let neuerVorFaktor = this.vorFaktor / pFaktor.vorFaktor;
     let neueListeExponenten = new Array();
-        if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
+    if (this.listeExponenten.length !== pFaktor.listeExponenten.length) {
       return;
     }
     for (let i = 0; i < this.listeExponenten.length; i++) {
@@ -141,7 +141,7 @@ class Ergebnis {
     return new Ergebnis(this.faktor.bringeAufRichtigeZehnerPotenz(), this.summand);
   }
   alsWert() {
-    return new Wert (this.faktor.alsWert().alsZahl() + this.summand, 0);
+    return new Wert(this.faktor.alsWert().alsZahl() + this.summand, 0);
   }
 }
 
@@ -161,15 +161,15 @@ class BasisEinheit extends Einheit {
     super(id, label);
     this.faktorIntraDimensional = faktorIntraDimensional;
   }
-  geteVWert(wert) {
+  getWertInNatuerlicheEinheit(wert) {
     let faktor = wert.alsFaktor();
     return faktor.multiplizieren(this.faktorIntraDimensional);
   }
-  getWertVoneV(faktor) {
+  getWertVonNatuerlicheEinheit(faktor) {
     return faktor.dividieren(this.faktorIntraDimensional);
   }
-  getErgebnisVoneV(faktor) {
-    return new Ergebnis(this.getWertVoneV(faktor), 0);
+  getErgebnisVonNatuerlicheEinheit(faktor) {
+    return new Ergebnis(this.getWertVonNatuerlicheEinheit(faktor), 0);
   }
 }
 
@@ -179,11 +179,11 @@ class UnterEinheit extends Einheit {
     this.basisEinheit = basisEinheit;
     this.faktorInterDimensional = faktorInterDimensional;
   }
-  geteVWert(wert) {
-    return this.basisEinheit.geteVWert(wert).multiplizieren(this.faktorInterDimensional);
+  getWertInNatuerlicheEinheit(wert) {
+    return this.basisEinheit.getWertInNatuerlicheEinheit(wert).multiplizieren(this.faktorInterDimensional);
   }
-  getErgebnisVoneV(faktor) {
-    return new Ergebnis(this.basisEinheit.getWertVoneV(faktor).dividieren(this.faktorInterDimensional), 0);
+  getErgebnisVonNatuerlicheEinheit(faktor) {
+    return new Ergebnis(this.basisEinheit.getWertVonNatuerlicheEinheit(faktor).dividieren(this.faktorInterDimensional), 0);
   }
 }
 class SpecialUnterEinheit extends Einheit {
@@ -193,25 +193,26 @@ class SpecialUnterEinheit extends Einheit {
     this.faktor = faktor;
     this.summandAufUnterEinheit = summandAufUnterEinheit;
     if (summandAufBasisEinheit === undefined) {
-      this.summandAufBasisEinheit = summandAufUnterEinheit
+      this.summandAufBasisEinheit = summandAufUnterEinheit;
     } else {
       this.summandAufBasisEinheit = summandAufBasisEinheit;
     }
   }
-  geteVWert(wert) {
+  getWertInNatuerlicheEinheit(wert) {
     let zahlInBasisEinheit = wert.alsZahl() * this.faktor + this.summandAufBasisEinheit;
     let wertInBasisEinheit = new Wert(zahlInBasisEinheit, 0).bringeAufRichtigeZehnerPotenz();
-    return this.basisEinheit.geteVWert(wertInBasisEinheit);
+    return this.basisEinheit.getWertInNatuerlicheEinheit(wertInBasisEinheit);
   }
-  getErgebnisVoneV(wert) {
-    return new Ergebnis(this.basisEinheit.getWertVoneV(wert).dividieren(faktorVonVorFaktor(this.faktor)), -this.summandAufUnterEinheit);
+  getErgebnisVonNatuerlicheEinheit(wert) {
+    return new Ergebnis(this.basisEinheit.getWertVonNatuerlicheEinheit(wert).dividieren(faktorVonVorFaktor(this.faktor)), -this.summandAufUnterEinheit);
   }
 }
 
 class Dimension {
-  constructor(listeEinheiten, id, label) {
+  constructor(listeEinheiten, id, label, natuerlicheEinheit) {
     this.listeEinheiten = listeEinheiten;
     this.id = id;
+    this.natuerlicheEinheit = natuerlicheEinheit;
     if (label !== undefined) {
       this.label = label;
     } else {
@@ -225,6 +226,9 @@ let dimensionen = new Map();
 
 function erstelleDimensionUndEinheiten(optionen) {
   let alleEinheitenDieserDimension = [];
+  let natuerlicheEinheit = new BasisEinheit(faktorVonVorFaktor(1), optionen.natuerlicheEinheit.id, optionen.natuerlicheEinheit.label);
+  einheiten.set(natuerlicheEinheit.id, natuerlicheEinheit);
+  alleEinheitenDieserDimension.push(natuerlicheEinheit);
   let basisEinheit = new BasisEinheit(optionen.basisEinheit.faktor, optionen.basisEinheit.id, optionen.basisEinheit.label);
   alleEinheitenDieserDimension.push(basisEinheit);
   einheiten.set(optionen.basisEinheit.id, basisEinheit);
@@ -233,8 +237,7 @@ function erstelleDimensionUndEinheiten(optionen) {
     alleEinheitenDieserDimension.push(unterEinheit);
     einheiten.set(unterEinheitOptionen.id, unterEinheit);
   }
-
-  let dimension = new Dimension(alleEinheitenDieserDimension, optionen.id, optionen.label);
+  let dimension = new Dimension(alleEinheitenDieserDimension, optionen.id, optionen.label, natuerlicheEinheit);
   dimensionen.set(optionen.id, dimension);
 }
 
@@ -265,20 +268,13 @@ function getAbgeleitetenFaktor(basisEinheiten, pExponenten) {
   return faktor;
 }
 
-//Natürliche Einheiten
-let eV = new BasisEinheit(new Faktor(1, [0, 0, 0, 0, 0, 0]), "eV");
-let keV = new UnterEinheit(eV, new Faktor(1, [3, 0, 0, 0, 0, 0]), "keV");
-let MeV = new UnterEinheit(eV, new Faktor(1, [6, 0, 0, 0, 0, 0]), "MeV");
-let GeV = new UnterEinheit(eV, new Faktor(1, [9, 0, 0, 0, 0, 0]), "GeV");
-
-let natuerlicheEinheiten = [eV, keV, MeV, GeV];
-for (let natuerlicheEinheit of natuerlicheEinheiten) {
-  einheiten.set(natuerlicheEinheit.id, natuerlicheEinheit);
-}
-
 erstelleDimensionUndEinheiten({
   id: "laenge",
   label: "Länge",
+  natuerlicheEinheit: {
+    id: "einsProEV",
+    label: "1/eV",
+  },
   basisEinheit: {
     id: "m",
     faktor: new Faktor(1, [0, -1, -1, 1, 0, 0]),
@@ -312,6 +308,10 @@ let m = einheiten.get("m");
 
 erstelleDimensionUndEinheiten({
   id: "masse",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "kg",
     faktor: new Faktor(1, [0, 2, 0, -1, 0, 0]),
@@ -346,6 +346,10 @@ let kg = einheiten.get("kg");
 
 erstelleDimensionUndEinheiten({
   id: "zeit",
+  natuerlicheEinheit: {
+    id: "einsProEV",
+    label: "1/eV",
+  },
   basisEinheit: {
     id: "s",
     faktor: new Faktor(1, [0, 0, -1, 1, 0, 0]),
@@ -373,6 +377,10 @@ let s = einheiten.get("s");
 
 erstelleDimensionUndEinheiten({
   id: "ladung",
+  natuerlicheEinheit: {
+    id: "eins",
+    label: "1",
+  },
   basisEinheit: {
     id: "C",
     faktor: new Faktor(1, [0, -0.5, -0.5, 0, -0.5, 0]),
@@ -406,6 +414,10 @@ let C = einheiten.get("C");
 
 erstelleDimensionUndEinheiten({
   id: "spannung",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "V",
     faktor: new Faktor(1, [0, 0, 0, 0, 0, 0]),
@@ -438,6 +450,10 @@ erstelleDimensionUndEinheiten({
 let V = einheiten.get("V");
 erstelleDimensionUndEinheiten({
   id: "frequenz",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "Hz",
     faktor: faktorVonVorFaktor(1).dividieren(s.faktorIntraDimensional),
@@ -470,6 +486,10 @@ erstelleDimensionUndEinheiten({
 //TODO
 erstelleDimensionUndEinheiten({
   id: "geschwindigkeit",
+  natuerlicheEinheit: {
+    id: "eins",
+    label: "1",
+  },
   basisEinheit: {
     id: "mPros",
     faktor: getAbgeleitetenFaktor([m, s], [1, -1]),
@@ -480,6 +500,10 @@ erstelleDimensionUndEinheiten({
 //TODO
 erstelleDimensionUndEinheiten({
   id: "beschleunigung",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "mPros2",
     faktor: getAbgeleitetenFaktor([m, s], [1, -2]),
@@ -489,6 +513,10 @@ erstelleDimensionUndEinheiten({
 //TODO
 erstelleDimensionUndEinheiten({
   id: "impuls",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "kgMalmPros",
     label: "kg ⋅ m/s",
@@ -499,6 +527,10 @@ erstelleDimensionUndEinheiten({
 
 erstelleDimensionUndEinheiten({
   id: "kraft",
+  natuerlicheEinheit: {
+    id: "eV2",
+    label: "eV²",
+  },
   basisEinheit: {
     id: "N",
     faktor: getAbgeleitetenFaktor([kg, m, s], [1, 1, -2]),
@@ -531,6 +563,10 @@ erstelleDimensionUndEinheiten({
 
 erstelleDimensionUndEinheiten({
   id: "stromstaerke",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "A",
     faktor: getAbgeleitetenFaktor([C, s], [1, -1]),
@@ -564,6 +600,10 @@ let A = einheiten.get("A");
 
 erstelleDimensionUndEinheiten({
   id: "leistung",
+  natuerlicheEinheit: {
+    id: "eV2",
+    label: "eV²",
+  },
   basisEinheit: {
     id: "W",
     faktor: getAbgeleitetenFaktor([V, A], [1, 1]),
@@ -593,9 +633,12 @@ erstelleDimensionUndEinheiten({
     { id: "qW", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
-
 erstelleDimensionUndEinheiten({
   id: "energie",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "J",
     faktor: getAbgeleitetenFaktor([kg, m, s], [1, 2, -2]),
@@ -628,6 +671,10 @@ erstelleDimensionUndEinheiten({
 //TODO
 erstelleDimensionUndEinheiten({
   id: "ladungsdichte",
+  natuerlicheEinheit: {
+    id: "einsProEV",
+    label: "1/eV",
+  },
   basisEinheit: {
     id: "CProm3",
     faktor: getAbgeleitetenFaktor([C, m], [1, -3]),
@@ -636,8 +683,12 @@ erstelleDimensionUndEinheiten({
 });
 //TODO
 erstelleDimensionUndEinheiten({
-  id: "elektrische stromdichte",
+  id: "elektrischeStromdichte",
   label: "Elektrische Stromdichte",
+  natuerlicheEinheit: {
+    id: "eV3",
+    label: "eV³",
+  },
   basisEinheit: {
     id: "AProm2",
     faktor: getAbgeleitetenFaktor([A, m], [1, -2]),
@@ -646,8 +697,12 @@ erstelleDimensionUndEinheiten({
 });
 //TODO
 erstelleDimensionUndEinheiten({
-  id: "elektrische feldstaerke",
+  id: "elektrischeFeldstaerke",
   label: "Elektrische Feldstärke",
+  natuerlicheEinheit: {
+    id: "eV2",
+    label: "eV²",
+  },
   basisEinheit: {
     id: "VProm",
     faktor: getAbgeleitetenFaktor([V, m], [1, -1]),
@@ -655,17 +710,25 @@ erstelleDimensionUndEinheiten({
   unterEinheiten: [],
 });
 //TODO
-erstelleDimensionUndEinheiten({
+/* erstelleDimensionUndEinheiten({
   id: "potential",
+  natuerlicheEinheit: {
+    id: "eV",
+    label: "eV",
+  },
   basisEinheit: {
     id: "VProm",
     faktor: getAbgeleitetenFaktor([V, m], [1, -1]), //TODO faktor
   },
   unterEinheiten: [],
-});
+}); */
 
 erstelleDimensionUndEinheiten({
   id: "druck",
+  natuerlicheEinheit: {
+    id: "eV3",
+    label: "eV³",
+  },
   basisEinheit: {
     id: "Pa",
     faktor: getAbgeleitetenFaktor([kg, m, s], [1, -1, -1]),
@@ -698,6 +761,10 @@ erstelleDimensionUndEinheiten({
 //TODO
 erstelleDimensionUndEinheiten({
   id: "dichte",
+  natuerlicheEinheit: {
+    id: "eV4",
+    label: "eV⁴",
+  },
   basisEinheit: {
     id: "kgProm3",
     faktor: getAbgeleitetenFaktor([kg, m], [1, -3]),
@@ -708,6 +775,10 @@ erstelleDimensionUndEinheiten({
 erstelleDimensionUndEinheiten({
   id: "flaeche",
   label: "Fläche",
+  natuerlicheEinheit: {
+    id: "einsProEV2",
+    label: "1/eV²",
+  },
   basisEinheit: {
     id: "m2",
     faktor: getAbgeleitetenFaktor([m], [2]),
@@ -740,6 +811,10 @@ erstelleDimensionUndEinheiten({
 
 erstelleDimensionUndEinheiten({
   id: "volumen",
+  natuerlicheEinheit: {
+    id: "einsProEV3",
+    label: "1/eV³",
+  },
   basisEinheit: {
     id: "m3",
     faktor: getAbgeleitetenFaktor([m], [3]),
@@ -769,18 +844,24 @@ erstelleDimensionUndEinheiten({
     { id: "qm3", faktor: faktorVonZehnerExponent(-30), label: "qm³" },
   ],
 });
-let K = new BasisEinheit(new Faktor(1, [0, 0, 0, -1, 0, 1]), "K")
+let K = new BasisEinheit(new Faktor(1, [0, 0, 0, -1, 0, 1]), "K");
 einheiten.set(K.id, K);
-let gradC = new SpecialUnterEinheit(K, 1, "gradC", "°C", 273.15)
-einheiten.set( gradC.id, gradC);
-let gradF = new SpecialUnterEinheit(K, 0.5555555555, "gradF", "°F", 459.67, 255,372)
-einheiten.set( gradF.id, gradF);
-let temperatur = new Dimension([K, gradC, gradF], "temperatur");
+let gradC = new SpecialUnterEinheit(K, 1, "gradC", "°C", 273.15);
+einheiten.set(gradC.id, gradC);
+let gradF = new SpecialUnterEinheit(K, 0.5555555555, "gradF", "°F", 459.67, 255, 372);
+einheiten.set(gradF.id, gradF);
+let natuerlicheEinheitTemperatur = new BasisEinheit(faktorVonVorFaktor(1), "eV")
+einheiten.set(natuerlicheEinheitTemperatur.id, natuerlicheEinheitTemperatur);
+let temperatur = new Dimension([K, gradC, gradF, natuerlicheEinheitTemperatur], "temperatur");
 dimensionen.set(temperatur.id, temperatur);
 
 erstelleDimensionUndEinheiten({
   id: "elektrischer widerstand",
   label: "Elektrischer Widerstand",
+  natuerlicheEinheit: {
+    id: "eins",
+    label: "1",
+  },
   basisEinheit: {
     id: "omega",
     label: "Ω",
@@ -861,7 +942,6 @@ function dimensionVeraendert() {
 
 function zuruecksetzenDroppdownOptionen() {
   setDropdownOptionSichtbarkeit(einheiten.values(), false);
-  setDropdownOptionSichtbarkeit(natuerlicheEinheiten, true);
 }
 
 function verarbeiteSubmitClick() {
@@ -894,10 +974,10 @@ function toKonstantenErgebnisString(ergebnis) {
   } else if (faktor.listeExponenten[0] !== 0) {
     konstAusgabe += " * 10^" + faktor.listeExponenten[0];
   }
-  
-  faktor.vorFaktor = runden(faktor.vorFaktor, 6)
+
+  faktor.vorFaktor = runden(faktor.vorFaktor, 6);
   let keineKonstanten = true;
-  const konstanten = ["c", "ℏ", "e", "ε₀", "kb"];
+  const konstanten = ["c", "ℏ", "e", "ε₀", "k"];
   for (let i = 0; i < konstanten.length; i++) {
     if (faktor.listeExponenten[i + 1] == 1) {
       konstAusgabe += " * " + konstanten[i];
@@ -926,7 +1006,7 @@ function toKonstantenErgebnisString(ergebnis) {
 
 function toGerundetesErgebnisString(ergebnis) {
   let gerundetesErgebnis = ergebnis.alsWert().bringeAufRichtigeZehnerPotenz();
-  let vorFaktor = runden(gerundetesErgebnis.vorFaktor, 6)
+  let vorFaktor = runden(gerundetesErgebnis.vorFaktor, 6);
   if (vorFaktor == 1 && gerundetesErgebnis.zehnerExponent == 0) {
     return "1";
   }
@@ -950,7 +1030,7 @@ function berechneErgebnis() {
   let zielEinheit = einheiten.get(getZieleinheit());
   let ausgangsWert = getAusgangsWert();
   //programm kann alles machen (mg -> nm), ist aber nicht sinnvoll
-  let ergebnis = zielEinheit.getErgebnisVoneV(ausgangsEinheit.geteVWert(ausgangsWert));
+  let ergebnis = zielEinheit.getErgebnisVonNatuerlicheEinheit(ausgangsEinheit.getWertInNatuerlicheEinheit(ausgangsWert));
   return ergebnis;
 }
 
