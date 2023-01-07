@@ -54,8 +54,8 @@ class Wert {
   hoch(exponent) {
     return new Wert(Math.pow(this.vorFaktor, exponent), this.zehnerExponent * exponent);
   }
-  multiplizieren(pKonstante) {
-    return new Wert(this.vorFaktor * pKonstante.vorFaktor, this.zehnerExponent + pKonstante.zehnerExponent);
+  multiplizieren(pWert) {
+    return new Wert(this.vorFaktor * pWert.vorFaktor, this.zehnerExponent + pWert.zehnerExponent);
   }
   alsZahl() {
     return this.vorFaktor * Math.pow(10, this.zehnerExponent);
@@ -114,10 +114,10 @@ class Faktor {
   }
 
   bringeAufRichtigeZehnerPotenz() {
-    let konstante = bringeAufRichtigeZehnerPotenz(this.vorFaktor, this.listeExponenten[0]);
+    let wert = bringeAufRichtigeZehnerPotenz(this.vorFaktor, this.listeExponenten[0]);
     let neueListeExponenten = [...this.listeExponenten];
-    neueListeExponenten[0] = konstante.zehnerExponent;
-    return new Faktor(konstante.vorFaktor, neueListeExponenten);
+    neueListeExponenten[0] = wert.zehnerExponent;
+    return new Faktor(wert.vorFaktor, neueListeExponenten);
   }
 }
 
@@ -769,18 +769,6 @@ erstelleDimensionUndEinheiten({
     { id: "qm3", faktor: faktorVonZehnerExponent(-30), label: "qm³" },
   ],
 });
-//TODO
-/*erstellenDimensionUndEinheiten({
-  id: "temperatur",
-  basisEinheit: {
-    id: "K",
-    faktor: new Faktor(1, [0, 0, 0, -1, 0, 1]),
-  },
-  unterEinheiten: [
-
-  ],
-});
-*/
 let K = new BasisEinheit(new Faktor(1, [0, 0, 0, -1, 0, 1]), "K")
 einheiten.set(K.id, K);
 let gradC = new SpecialUnterEinheit(K, 1, "gradC", "°C", 273.15)
@@ -909,7 +897,7 @@ function toKonstantenErgebnisString(ergebnis) {
   
   faktor.vorFaktor = runden(faktor.vorFaktor, 6)
   let keineKonstanten = true;
-  const konstanten = ["c", "ℏ", "e", "ε₀"];
+  const konstanten = ["c", "ℏ", "e", "ε₀", "kb"];
   for (let i = 0; i < konstanten.length; i++) {
     if (faktor.listeExponenten[i + 1] == 1) {
       konstAusgabe += " * " + konstanten[i];
