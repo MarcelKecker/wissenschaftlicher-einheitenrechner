@@ -6,7 +6,7 @@ class Dimension {
       if (label !== undefined) {
         this.label = label;
       } else {
-        this.label = capitalizeFirstLetter(this.id);
+        this.label = schreibeErstenBuchstabenGross(this.id);
       }
     }
   }

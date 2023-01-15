@@ -1,4 +1,3 @@
-.entsprichtZeichen,
 .dropdown,
 .dropdown1,
 .dropdownDimension,
@@ -9,11 +8,6 @@
   height: 10%;
   width: 30%;
   position: fixed;
-}
-
-.submit,
-.ausgangsWert,
-.endWertAusgaben {
   padding: 5px;
   border-radius: 10px;
   background-color: #eeeded;
@@ -22,14 +16,15 @@
   border-width: 1px;
 }
 
-.dropdown:hover .dropbtn,
-.dropdown1:hover .dropbtn,
-.dropdownDimension:hover .dropbtn {
-  background-color: #ddd;
+.entsprichtZeichen {
+  box-sizing: border-box;
+  height: 10%;
+  width: 30%;
+  position: fixed;
 }
 
 .dropdownDimension {
-  top: 30%;
+  top: 20%;
   left: 30%;
 }
 
@@ -39,7 +34,7 @@
 }
 
 .dropdown {
-  top: 50%;
+  top: 40%;
   left: 50%;
 }
 
@@ -58,7 +53,7 @@
 }
 
 .dropdown1 {
-  top: 70%;
+  top: 60%;
   left: 50%;
 }
 

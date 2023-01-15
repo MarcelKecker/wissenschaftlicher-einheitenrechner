@@ -67,6 +67,9 @@ function erstelleOptionenFuerDimensionen() {
     document.getElementById("dropdownDimension").appendChild(element);
   }
 }
+function schreibeErstenBuchstabenKlein(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+}
 
 function dimensionVeraendert() {
   document.getElementById("dropdownZiel").value = "";
@@ -82,7 +85,8 @@ function dimensionVeraendert() {
     document.getElementById("dropdownStart").disabled = true;
     return;
   }
-  let rechenDimension = dimension.toLowerCase().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
+  
+  let rechenDimension = schreibeErstenBuchstabenKlein(dimension).replace("ä", "ae").replace("ö", "oe").replace("ü", "ue");
   setDropdownOptionSichtbarkeit(dimensionen.get(rechenDimension).listeEinheiten, true);
 
   document.getElementById("dropdownZiel").disabled = false;

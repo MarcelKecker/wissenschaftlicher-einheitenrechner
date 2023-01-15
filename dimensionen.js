@@ -46,7 +46,7 @@ function getAbgeleitetenFaktor(basisEinheiten, pExponenten) {
   return faktor;
 }
 
-function capitalizeFirstLetter(string) {
+function schreibeErstenBuchstabenGross(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -265,7 +265,6 @@ erstelleDimensionUndEinheiten({
     { id: "qHz", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
-//TODO
 erstelleDimensionUndEinheiten({
   id: "geschwindigkeit",
   natuerlicheEinheit: {
@@ -277,9 +276,35 @@ erstelleDimensionUndEinheiten({
     faktor: getAbgeleitetenFaktor([m, s], [1, -1]),
     label: "m/s",
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "kmPros", faktor: faktorVonZehnerExponent(3), label: "km/s" },
+    { id: "dmPros", faktor: faktorVonZehnerExponent(-1), label: "dm/s" },
+    { id: "cmPros", faktor: faktorVonZehnerExponent(-2), label: "cm/s" },
+    { id: "mmPros", faktor: faktorVonZehnerExponent(-3), label: "mm/s" },
+    { id: "miPros", faktor: faktorVonVorFaktor(1609.34285714), label: "mi/s" },
+
+    { id: "kmProms", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonZehnerExponent(-3)), label: "km/ms" },
+    { id: "mProms", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(-3)), label: "m/ms" },
+    { id: "dmProms", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonZehnerExponent(-3)), label: "dm/ms" },
+    { id: "cmProms", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonZehnerExponent(-3)), label: "cm/ms" },
+    { id: "mmProms", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(-3)), label: "mm/ms" },
+    { id: "miProms", faktor: faktorVonVorFaktor(1609.34285714).dividieren(faktorVonZehnerExponent(-3)), label: "mi/ms" },
+
+    { id: "kmPromin", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonVorFaktor(60)), label: "km/min" },
+    { id: "mPromin", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonVorFaktor(60)), label: "m/min" },
+    { id: "dmPromin", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonVorFaktor(60)), label: "dm/min" },
+    { id: "cmPromin", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonVorFaktor(60)), label: "cm/min" },
+    { id: "mmPromin", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonVorFaktor(60)), label: "mm/min" },
+    { id: "miPromin", faktor: faktorVonVorFaktor(1609.34285714).dividieren(faktorVonVorFaktor(60)), label: "mi/min" },
+
+    { id: "kmProh", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonVorFaktor(3600)), label: "km/h" },
+    { id: "mProh", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonVorFaktor(3600)), label: "m/h" },
+    { id: "dmProh", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonVorFaktor(3600)), label: "dm/h" },
+    { id: "cmProh", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonVorFaktor(3600)), label: "cm/h" },
+    { id: "mmProh", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonVorFaktor(3600)), label: "mm/h" },
+    { id: "miProh", faktor: faktorVonVorFaktor(1609.34285714).dividieren(faktorVonVorFaktor(3600)), label: "mi/h" },
+  ],
 });
-//TODO
 erstelleDimensionUndEinheiten({
   id: "beschleunigung",
   natuerlicheEinheit: {
@@ -288,11 +313,35 @@ erstelleDimensionUndEinheiten({
   },
   basisEinheit: {
     id: "mPros2",
+    label: "m/s²",
     faktor: getAbgeleitetenFaktor([m, s], [1, -2]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "kmPros2", faktor: faktorVonZehnerExponent(3), label: "km/s²" },
+    { id: "dmPros2", faktor: faktorVonZehnerExponent(-1), label: "dm/s²" },
+    { id: "cmPros2", faktor: faktorVonZehnerExponent(-2), label: "cm/s²" },
+    { id: "mmPros2", faktor: faktorVonZehnerExponent(-3), label: "mm/s²" },
+    { id: "miPros2", faktor: faktorVonVorFaktor(1609.34285714), label: "mi/s²" },
+    { id: "kmProms2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "km/ms²" },
+    { id: "mProms2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "m/ms²" },
+    { id: "dmProms2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "dm/ms²" },
+    { id: "cmProms2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "cm/ms²" },
+    { id: "mmProms2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "mm/ms²" },
+    { id: "miProms2", faktor: faktorVonVorFaktor(1609.34285714).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "mi/ms²" },
+    { id: "kmPromin2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "km/min²" },
+    { id: "mPromin2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "m/min²" },
+    { id: "dmPromin2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "dm/min²" },
+    { id: "cmPromin2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "cm/min²" },
+    { id: "mmPromin2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "mm/min²" },
+    { id: "miPromin2", faktor: faktorVonVorFaktor(1609.34285714).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "mi/min²" },
+    { id: "kmProh2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "km/h²" },
+    { id: "mProh2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "m/h²" },
+    { id: "dmProh2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "dm/h²" },
+    { id: "cmProh2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "cm/h²" },
+    { id: "mmProh2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "mm/h²" },
+    { id: "miProh2", faktor: faktorVonVorFaktor(1609.34285714).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "mi/h²" },
+  ],
 });
-//TODO
 erstelleDimensionUndEinheiten({
   id: "impuls",
   natuerlicheEinheit: {
@@ -448,10 +497,8 @@ erstelleDimensionUndEinheiten({
     { id: "yJ", faktor: faktorVonZehnerExponent(-24) },
     { id: "rJ", faktor: faktorVonZehnerExponent(-27) },
     { id: "qJ", faktor: faktorVonZehnerExponent(-30) },
-    //TODO eV, GeV, ...
   ],
 });
-//TODO
 erstelleDimensionUndEinheiten({
   id: "ladungsdichte",
   natuerlicheEinheit: {
@@ -460,11 +507,31 @@ erstelleDimensionUndEinheiten({
   },
   basisEinheit: {
     id: "CProm3",
+    label: "C/m³",
     faktor: getAbgeleitetenFaktor([C, m], [1, -3]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "kCPros2", faktor: faktorVonZehnerExponent(3), label: "kC/s³" },
+    { id: "dCPros2", faktor: faktorVonZehnerExponent(-1), label: "dC/s³" },
+    { id: "cCPros2", faktor: faktorVonZehnerExponent(-2), label: "cC/s³" },
+    { id: "mCPros2", faktor: faktorVonZehnerExponent(-3), label: "mC/s³" },
+    { id: "kCProms2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "kC/ms³" },
+    { id: "CProms2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "C/ms³" },
+    { id: "dCProms2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "dC/ms³" },
+    { id: "cCProms2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "cC/ms³" },
+    { id: "mCProms2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "mC/ms³" },
+    { id: "kCPromin2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "kC/min³" },
+    { id: "CPromin2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "C/min³" },
+    { id: "dCPromin2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "dC/min³" },
+    { id: "cCPromin2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "cC/min³" },
+    { id: "mCPromin2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)).dividieren(faktorVonVorFaktor(60)), label: "mC/min³" },
+    { id: "kCProh2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "kC/h³" },
+    { id: "CProh2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "C/h³" },
+    { id: "dCProh2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "dC/h³" },
+    { id: "cCProh2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "cC/h³" },
+    { id: "mCProh2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)).dividieren(faktorVonVorFaktor(3600)), label: "mC/h³" },
+  ],
 });
-//TODO
 erstelleDimensionUndEinheiten({
   id: "elektrischeStromdichte",
   label: "Elektrische Stromdichte",
@@ -474,11 +541,26 @@ erstelleDimensionUndEinheiten({
   },
   basisEinheit: {
     id: "AProm2",
+    label: "A/m²",
     faktor: getAbgeleitetenFaktor([A, m], [1, -2]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "kAProm2", faktor: faktorVonZehnerExponent(3), label: "kA/m²" },
+    { id: "dAProm2", faktor: faktorVonZehnerExponent(-1), label: "dA/m²" },
+    { id: "cAProm2", faktor: faktorVonZehnerExponent(-2), label: "cA/m²" },
+    { id: "mAProm2", faktor: faktorVonZehnerExponent(-3), label: "mA/m²" },
+    { id: "kAPromm2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "kA/mm²" },
+    { id: "APromm2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "A/mm²" },
+    { id: "dAPromm2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "dA/mm²" },
+    { id: "cAPromm2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "cA/mm²" },
+    { id: "mAPromm2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "mA/mm²" },
+    { id: "kAProkm2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "kA/km²" },
+    { id: "AProkm2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "A/km²" },
+    { id: "dAProkm2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "dA/km²" },
+    { id: "cAProkm2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "cA/km²" },
+    { id: "mAProkm2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "mA/km²" },
+  ],
 });
-//TODO
 erstelleDimensionUndEinheiten({
   id: "elektrischeFeldstaerke",
   label: "Elektrische Feldstärke",
@@ -488,23 +570,26 @@ erstelleDimensionUndEinheiten({
   },
   basisEinheit: {
     id: "VProm",
+    label: "V/m",
     faktor: getAbgeleitetenFaktor([V, m], [1, -1]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "kVProm2", faktor: faktorVonZehnerExponent(3), label: "kV/m²" },
+    { id: "dVProm2", faktor: faktorVonZehnerExponent(-1), label: "dV/m²" },
+    { id: "cVProm2", faktor: faktorVonZehnerExponent(-2), label: "cV/m²" },
+    { id: "mVProm2", faktor: faktorVonZehnerExponent(-3), label: "mV/m²" },
+    { id: "kVPromm2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonZehnerExponent(-3)), label: "kV/mm²" },
+    { id: "VPromm2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(-3)), label: "V/mm²" },
+    { id: "dVPromm2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonZehnerExponent(-3)), label: "dV/mm²" },
+    { id: "cVPromm2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonZehnerExponent(-3)), label: "cV/mm²" },
+    { id: "mVPromm2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(-3)), label: "mV/mm²" },
+    { id: "kVProkm2", faktor: faktorVonZehnerExponent(3).dividieren(faktorVonZehnerExponent(3)), label: "kV/km²" },
+    { id: "VProkm2", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(3)), label: "V/km²" },
+    { id: "dVProkm2", faktor: faktorVonZehnerExponent(-1).dividieren(faktorVonZehnerExponent(3)), label: "dV/km²" },
+    { id: "cVProkm2", faktor: faktorVonZehnerExponent(-2).dividieren(faktorVonZehnerExponent(3)), label: "cV/km²" },
+    { id: "mVProkm2", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(3)), label: "mV/km²" },
+  ],
 });
-//TODO
-/* erstelleDimensionUndEinheiten({
-    id: "potential",
-    natuerlicheEinheit: {
-      id: "eV",
-      label: "eV",
-    },
-    basisEinheit: {
-      id: "VProm",
-      faktor: getAbgeleitetenFaktor([V, m], [1, -1]), //TODO faktor
-    },
-    unterEinheiten: [],
-  }); */
 
 erstelleDimensionUndEinheiten({
   id: "druck",
@@ -541,7 +626,6 @@ erstelleDimensionUndEinheiten({
     { id: "qPa", faktor: faktorVonZehnerExponent(-30) },
   ],
 });
-//TODO
 erstelleDimensionUndEinheiten({
   id: "dichte",
   natuerlicheEinheit: {
@@ -550,9 +634,25 @@ erstelleDimensionUndEinheiten({
   },
   basisEinheit: {
     id: "kgProm3",
+    label: "kg/m³",
     faktor: getAbgeleitetenFaktor([kg, m], [1, -3]),
   },
-  unterEinheiten: [],
+  unterEinheiten: [
+    { id: "gProm3", faktor: faktorVonZehnerExponent(-3), label: "g/m³" },
+    { id: "dgProm3", faktor: faktorVonZehnerExponent(-4), label: "dg/m³" },
+    { id: "cgProm3", faktor: faktorVonZehnerExponent(-5), label: "cg/m³" },
+    { id: "mgProm3", faktor: faktorVonZehnerExponent(-6), label: "mg/m³" },
+    { id: "kgPromm3", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "kg/mm³" },
+    { id: "gPromm3", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "g/mm³" },
+    { id: "dgPromm3", faktor: faktorVonZehnerExponent(-4).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "dg/mm³" },
+    { id: "cgPromm3", faktor: faktorVonZehnerExponent(-5).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "cg/mm³" },
+    { id: "mgPromm3", faktor: faktorVonZehnerExponent(-6).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)).dividieren(faktorVonZehnerExponent(-3)), label: "mg/mm³" },
+    { id: "kgProkm3", faktor: faktorVonZehnerExponent(0).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "kg/km³" },
+    { id: "gProkm3", faktor: faktorVonZehnerExponent(-3).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "g/km³" },
+    { id: "dgProkm3", faktor: faktorVonZehnerExponent(-4).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "dg/km³" },
+    { id: "cgProkm3", faktor: faktorVonZehnerExponent(-5).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "cg/km³" },
+    { id: "mgProkm3", faktor: faktorVonZehnerExponent(-6).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)).dividieren(faktorVonZehnerExponent(3)), label: "mg/km³" },
+  ],
 });
 
 erstelleDimensionUndEinheiten({
