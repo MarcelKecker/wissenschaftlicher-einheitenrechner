@@ -1,4 +1,4 @@
-class SpecialUnterEinheit extends Einheit {
+class VersetzteUnterEinheit extends Einheit {
     constructor(basisEinheit, faktor, id, label, summandAufUnterEinheit, summandAufBasisEinheit) {
       super(id, label);
       this.basisEinheit = basisEinheit;
@@ -15,7 +15,7 @@ class SpecialUnterEinheit extends Einheit {
       let wertInBasisEinheit = new Wert(zahlInBasisEinheit, 0).bringeAufRichtigeZehnerPotenz();
       return this.basisEinheit.getWertInNatuerlicheEinheit(wertInBasisEinheit);
     }
-    getErgebnisVonNatuerlicheEinheit(wert) {
-      return new Ergebnis(this.basisEinheit.getWertVonNatuerlicheEinheit(wert).dividieren(faktorVonVorFaktor(this.faktor)), -this.summandAufUnterEinheit);
+    getErgebnisVonNatuerlicheEinheit(faktor) {
+      return new Ergebnis(this.basisEinheit.getWertVonNatuerlicheEinheit(faktor).dividieren(faktorVonVorFaktor(this.faktor)), -this.summandAufUnterEinheit);
     }
   }

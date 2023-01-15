@@ -629,9 +629,9 @@ erstelleDimensionUndEinheiten({
 });
 let K = new BasisEinheit(new Faktor(1, [0, 0, 0, -1, 0, 1]), "K");
 einheiten.set(K.id, K);
-let gradC = new SpecialUnterEinheit(K, 1, "gradC", "°C", 273.15);
+let gradC = new VersetzteUnterEinheit(K, 1, "gradC", "°C", 273.15);
 einheiten.set(gradC.id, gradC);
-let gradF = new SpecialUnterEinheit(K, 0.5555555555, "gradF", "°F", 459.67, 255, 372);
+let gradF = new VersetzteUnterEinheit(K, 0.5555555555, "gradF", "°F", 459.67, 255, 372);
 einheiten.set(gradF.id, gradF);
 let natuerlicheEinheitTemperatur = new BasisEinheit(faktorVonVorFaktor(1), "eV");
 einheiten.set(natuerlicheEinheitTemperatur.id, natuerlicheEinheitTemperatur);
