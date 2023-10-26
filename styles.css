@@ -1,63 +1,48 @@
-.dropdown,
-.dropdown1,
-.dropdownDimension,
-.ausgangsWert,
-.submit,
-.endWertAusgaben {
-  box-sizing: border-box;
-  height: 10%;
-  width: 30%;
-  position: fixed;
-  padding: 5px;
-  border-radius: 10px;
-  background-color: #eeeded;
-  border-style: solid;
-  border-color: rgb(0, 0, 0);
-  border-width: 1px;
-}
-
-.entsprichtZeichen {
-  box-sizing: border-box;
-  height: 10%;
-  width: 30%;
-  position: fixed;
-}
-
-.dropdownDimension {
-  top: 20%;
-  left: 30%;
-}
-
-.ausgangsWert {
-  top: 40%;
-  left: 10%;
-}
-
-.dropdown {
-  top: 40%;
-  left: 50%;
-}
-
-.entsprichtZeichen {
-  top: 40%;
-  left: 82%;
-  font-size: 500%;
-}
-
-.endWertAusgaben {
-  top: 60%;
-  left: 10%;
+body {
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
-.dropdown1 {
-  top: 60%;
-  left: 50%;
+.chessboard {
+  display: grid;
+  grid-template-columns: repeat(8, 50px);
+  grid-template-rows: repeat(8, 50px);
 }
 
-.submit {
-  top: 80%;
-  left: 30%;
+.row {
+  display: flex;
+}
+
+.square {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+
+.light {
+  background-color: #f0d9b5;
+}
+
+.dark {
+  background-color: #b58863;
+}
+
+/* Define styles for chess pieces */
+.chessboard .square::before {
+  content: "";
+}
+
+/* You can style the chess pieces using ::before for each square, for example */
+.chessboard .square.dark::before {
+  color: black;
+}
+
+.chessboard .square.light::before {
+  color: white;
 }
